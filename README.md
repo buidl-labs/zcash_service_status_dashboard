@@ -1,7 +1,7 @@
 # ZCash Service Status Dashboard
-This readme deals with installation and setup instructions for building a health-check system for ZCash communities and exchanges. For a detailed look, visit [here](https://zcashservicestatus.info).
+This readme deals with installation and setup instructions for building a health-check system for ZCash communities and exchanges. The dashboard is live [here](https://zcashservicestatus.info).
 
-The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana. There is one Python script which iterates over twelve exchanges to extract and load the data in the dashboard. 
+The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana. There is one Python script which iterates over twelve exchanges to extract and load the data in the dashboard. The Blackbox Exporter deals with checking on all the sites and forums (it checks for `200` status.)
 
 ## Installing Prometheus:
 ```
