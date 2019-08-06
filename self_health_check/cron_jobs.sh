@@ -1,0 +1,1 @@
+source $PYTHON_ENVIRONMENT_PATH && cd $ZEC_SERVICE_MODULE_DIR_PATH && python3 -m self_health_check.blackbox_exporter_tester && deactivate
