@@ -390,8 +390,6 @@ while True:
     except Exception as e:
         notify_exchange_error("Coinjar", str(e))
 
-    # TODO: Spot Price Deviation Check for each exchange
-    # Try setting different gauges for different exchanges and then plotting them altogether on Grafana.
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
                       bittrex_usd_spot_price, cex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
     spot_price_btc = [exmo_btc_spot_price, bitlish_btc_spot_price,
@@ -399,7 +397,6 @@ while True:
     spot_price_median_usd = median(spot_price_usd)
     spot_price_median_btc = median(spot_price_btc)
     # Create a config of exchange: price for many use-cases
-    # TODO: have this configured out of the code
     spot_price_usd_all_exchanges = {
         "Exmo": exmo_usd_spot_price,
         "Bitlish": bitlish_usd_spot_price,
