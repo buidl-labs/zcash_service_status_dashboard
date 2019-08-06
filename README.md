@@ -1,4 +1,9 @@
-# Installing Prometheus:
+# ZCash Service Status Dashboard
+This readme deals with installation and setup instructions for building a health-check system for ZCash communities and exchanges. For a detailed look, visit [here](https://zcashservicestatus.info).
+
+The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana. There is one Python script which iterates over twelve exchanges to extract and load the data in the dashboard. 
+
+## Installing Prometheus:
 ```
 wget https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg | sudo apt-key add -
 sudo apt-get update -y
@@ -90,7 +95,7 @@ sudo service prometheus restart
 sudo service prometheus status
 ```
 
-# Installing Grafana
+## Installing Grafana
 ```
 sudo apt-get install -y software-properties-common
 wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
@@ -102,7 +107,7 @@ sudo service grafana-server start
 sudo service grafana-server status
 ```
 
-# Installing Blackbox Exporter
+## Installing Blackbox Exporter
 ```
 wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.14.0/blackbox_exporter-0.14.0.linux-amd64.tar.gz .
 tar -vxzf blackbox_exporter-0.14.0.linux-amd64.tar.gz
@@ -159,4 +164,6 @@ pip3 install prometheus-client==0.7.1
 Now, run the command `python3 driver_exchanges_health_check.py` in order to run the script for all the health checks on exchanges.
 
 
-Install NGINX and apply HTTPS using Let'sEncrypt.
+Install NGINX and apply SSL using Let'sEncrypt.
+
+Note: This readme will be further updated with 'why' section and some FAQs. Please feel free to open any issue and provide us your valuable feedback.
