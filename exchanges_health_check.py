@@ -31,7 +31,7 @@ while True:
         bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = \
         cex_zec_usd_response = cex_zec_btc_response = gemini_zec_usd_response = \
         gemini_zec_btc_response = bitfinex_zec_usd_response = bitfinex_zec_btc_response = \
-        binance_zec_btc_response = coinbase_zec_usd_response = \
+        binance_zec_btc_response = coinbase_zec_usd_response = zcha_network_response = \
         kraken_zec_usd_response = coinjar_zec_btc_response = None
     try:
         exmo_response = requests.get(url=EXMO_URL, timeout=5)
@@ -116,6 +116,23 @@ while True:
     try:
         coinjar_zec_btc_response = requests.get(
             url=COINJAR_ZEC_BTC_URL, timeout=5)
+    except Exception as e:
+        notify_driver_health_check_issue(e)
+        pass
+    try:
+        zcha_network_response = requests.get(url = ZCHA_NETWORK_URL, timeout = 5)
+    except Exception as e:
+        notify_driver_health_check_issue(e)
+        pass
+
+    #ZCASHD
+    try:
+        zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+    except Exception as e:
+        notify_driver_health_check_issue(e)
+        pass
+    try:
+        zcashd_blockchain_info = subprocess.run(["zcash-cli","getblockchaininfo"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except Exception as e:
         notify_driver_health_check_issue(e)
         pass
@@ -389,6 +406,32 @@ while True:
         COINJAR_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
     except Exception as e:
         notify_exchange_error("Coinjar", str(e))
+
+    #ZCHA
+    try:
+        zcashd_height = int((zcashd_blockcount_data.stdout).strip())
+        zcha_network_data = zcha_network_response.json()
+        zcha_block_height = int(zcha_network_data['blockNumber'])
+        zcha_last_block_hash = zcha_network_data['blockHash']
+        if zcha_block_height == zcashd_height:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCHA_BLOCK HEIGHT_PORT.state(set_state)
+    except Exception as e:
+        notify_exchange_error("ZCHA", str(e))
+        #TODO - separate function for Explorers required
+
+    #METRICS
+    try:
+        zcashd_blockchain_info_data = (zcashd_blockchain_info.stdout)json()
+        sprout_value_pool = float(["valuePools"][0]["chainValue"])
+        SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
+        sapling_value_pool = float(["valuePools"][1]["chainValue"])
+        SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
+    except Exception as e:
+        notify_exchange_error("VALUEPOOL", str(e))
+        #TODO - separate function for Metrics required
 
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
                       bittrex_usd_spot_price, cex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
