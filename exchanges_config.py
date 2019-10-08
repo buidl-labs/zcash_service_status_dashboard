@@ -61,25 +61,6 @@ BITTREX_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('bittrex_btc_spot_price_deviation
                                                'bittrex_btc_spot_price_deviation_gauge gauge')
 
 
-# Cex Configs
-CEX_ZEC_USD_URL = "https://cex.io/api/ticker/ZEC/USD"
-CEX_ZEC_BTC_URL = "https://cex.io/api/ticker/ZEC/BTC"
-CEX_SPOT_PRICE_BTC_PORT = Enum('cex_spot_price_btc_check',
-                               'Cex Spot Price BTC Check', states=['1', '0'])
-CEX_SPOT_PRICE_USD_PORT = Enum('cex_spot_price_usd_check',
-                               'Cex Spot Price USD Check', states=['1', '0'])
-CEX_TRANSACTION_VOLUME_BTC_PORT = Enum(
-    'cex_transaction_volume_btc_check', 'Cex Transaction Volume BTC Check', states=['1', '0'])
-CEX_TRANSACTION_VOLUME_USD_PORT = Enum(
-    'cex_transaction_volume_usd_check', 'Cex Transaction Volume USD Check', states=['1', '0'])
-CEX_SPOT_PRICE_MEDIAN_DEVIATION_PORT = Histogram(
-    'cex_spot_price_deviation_check', 'Cex Spot Price Deviation Check')
-CEX_USD_SPOT_PRICE_DEVIATION_GAUGE = Gauge('cex_usd_spot_price_deviation_gauge',
-                                           'cex_usd_spot_price_deviation_gauge gauge')
-CEX_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('cex_btc_spot_price_deviation_gauge',
-                                           'cex_btc_spot_price_deviation_gauge gauge')
-
-
 # Gemini Configs
 GEMINI_ZEC_BTC_URL = "https://api.gemini.com/v1/pubticker/zecbtc"
 GEMINI_ZEC_USD_URL = "https://api.gemini.com/v1/pubticker/zecusd"
@@ -156,7 +137,7 @@ COINJAR_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('coinjar_btc_spot_price_deviation
 
 #ZCHA EXPLORER Configs
 ZCHA_NETWORK_URL = "https://api.zcha.in/v2/mainnet/network"
-ZCHA_BLOCK HEIGHT_PORT = Enum(
+ZCHA_BLOCK_HEIGHT_PORT = Enum(
     'zcha_block_height_check', 'ZCHA Block Height Check', states=['1', '0'])
 
 #METRICS
@@ -169,7 +150,6 @@ USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitlish": BITLISH_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bittrex": BITTREX_USD_SPOT_PRICE_DEVIATION_GAUGE,
-    "Cex": CEX_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Gemini": GEMINI_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitfinex": BITFINEX_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Coinbase": COINBASE_USD_SPOT_PRICE_DEVIATION_GAUGE,
@@ -180,7 +160,6 @@ BTC_EXCHANGE = {
     "Exmo": EXMO_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitlish": BITLISH_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Bittrex": BITTREX_BTC_SPOT_PRICE_DEVIATION_GAUGE,
-    "Cex": CEX_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Gemini": GEMINI_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitfinex": BITFINEX_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Binance": BINANCE_BTC_SPOT_PRICE_DEVIATION_GAUGE,
