@@ -384,10 +384,10 @@ while True:
 
     #METRICS
     try:
-        zcashd_blockchain_info_data = (zcashd_blockchain_info.stdout).json()
-        sprout_value_pool = float(["valuePools"][0]["chainValue"])
+        zcashd_blockchain_info_data = json.loads((zcashd_blockchain_info.stdout).strip())
+        sprout_value_pool = float(zcashd_blockchain_info_data["valuePools"][0]["chainValue"])
         SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
-        sapling_value_pool = float(["valuePools"][1]["chainValue"])
+        sapling_value_pool = float(zcashd_blockchain_info_data["valuePools"][1]["chainValue"])
         SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
     except Exception as e:
         notify_exchange_error("VALUEPOOL", str(e))
