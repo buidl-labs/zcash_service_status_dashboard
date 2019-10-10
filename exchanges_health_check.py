@@ -23,7 +23,13 @@ def notify_exchange_error(exchange, exception):
             exchange, exception
         )
     )
-
+def block_info(block_hash_or_height):
+    try:
+        zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+    except Exception as e:
+        notify_driver_health_check_issue(e)
+    zcashd_block = json.loads((zcashd_block_data.stdout).strip())
+    return zcashd_block
 
 slack_notification_counter = 0
 while True:
@@ -378,6 +384,43 @@ while True:
         else:
             set_state = '0'
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
+        zcashd_block = block_info(zcha_last_block_hash)
+        zcha_last_block_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash, timeout=5)
+        zcha_last_block = zcha_last_block_response.json()
+        zcha_block_props = (
+            zcha_last_block["hash"],
+            zcha_last_block["size"],
+            zcha_last_block["height"],
+            zcha_last_block["transactions"],
+            zcha_last_block["version"],
+            zcha_last_block["merkleRoot"],
+            zcha_last_block["timestamp"],
+            zcha_last_block["nonce"],
+            zcha_last_block["solution"],
+            zcha_last_block["bits"]
+            zcha_last_block["chainWork"],
+            zcha_last_block["prevHash"]
+            )
+        zcashd_block_props =(
+            zcashd_block["hash"],
+            zcashd_block["size"],
+            zcashd_block["height"],
+            str(len(zcashd_block["tx"])),
+            zcashd_block["version"],
+            zcashd_block["merkleroot"],
+            zcashd_block["time"],
+            zcashd_block["nonce"],
+            zcashd_block["solution"],
+            zcashd_block["bits"],
+            zcashd_block["chainwork"],
+            zcashd_block["previousblockhash"]
+            )
+        #TODO: check transactions
+        if zcha_block_props == zcashd_block_props:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except Exception as e:
         notify_exchange_error("ZCHA", str(e))
         #TODO - separate function for Explorers required
@@ -389,6 +432,8 @@ while True:
         SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
         sapling_value_pool = float(zcashd_blockchain_info_data["valuePools"][1]["chainValue"])
         SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
+        zcash_difficulty = float(zcashd_blockchain_info_data["difficulty"])
+        ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
     except Exception as e:
         notify_exchange_error("VALUEPOOL", str(e))
         #TODO - separate function for Metrics required

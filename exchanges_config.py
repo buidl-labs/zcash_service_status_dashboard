@@ -137,14 +137,19 @@ COINJAR_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('coinjar_btc_spot_price_deviation
 
 #ZCHA EXPLORER Configs
 ZCHA_NETWORK_URL = "https://api.zcha.in/v2/mainnet/network"
+ZCHA_BLOCK_URL = "https://api.zcha.in/v2/mainnet/blocks/"
+ZCHA_LAST_BLOCK_CHECK_PORT = Enum(
+    'zcha_last_block_check', 'ZCHA LAST BLOCK CHECK', states=['1', '0'])
 ZCHA_BLOCK_HEIGHT_PORT = Enum(
     'zcha_block_height_check', 'ZCHA Block Height Check', states=['1', '0'])
 
 #METRICS
 SPROUT_VALUE_POOL_GAUGE = Gauge('sprout_value_pool_gauge',
-                                               'sprout_value_pool_gauge gauge')
+                                'sprout_value_pool_gauge gauge')
 SAPLING_VALUE_POOL_GAUGE = Gauge('sapling_value_pool_gauge',
-                                               'sapling_value_pool_gauge gauge')
+                                 'sapling_value_pool_gauge gauge')
+ZCASH_DIFFICULTY_GAUGE = Gauge('zcash_difficulty_gauge',
+                               'zcash_difficulty_gauge gauge')
 
 USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE,
