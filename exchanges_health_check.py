@@ -42,6 +42,29 @@ def transaction_type_check(block_hash_or_height):
             shielded_counter+=1
     return(transparent_counter,shielded_counter)
 
+def zcashd_fields(last_block_hash_or_height):
+    zcashd_block = block_info(last_block_hash_or_height, "1")
+    zcashd_transaction_hashes = []
+    for this_transaction in range(len(zcashd_block["tx"])):
+        zcashd_transaction_hashes.append(zcashd_block["tx"][this_transaction])
+    zcashd_transaction_hashes.sort()
+    zcashd_block_fields =(
+        zcashd_block["hash"],
+        zcashd_block["size"],
+        zcashd_block["height"],
+        len(zcashd_block["tx"]),
+        zcashd_block["version"],
+        zcashd_block["merkleroot"],
+        zcashd_block["time"],
+        zcashd_block["nonce"],
+        zcashd_block["solution"],
+        zcashd_block["bits"],
+        zcashd_block["chainwork"],
+        zcashd_block["previousblockhash"],
+        zcashd_transaction_hashes
+        )
+    return zcashd_block_fields
+
 try:
     last_block_transactions_checked_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
 except Exception as e:
@@ -391,9 +414,8 @@ while True:
         notify_exchange_error("Coinjar", str(e))
 
     #ZCHA
-    #this way has its drawbacks - if two or more blocks get mined in 120 secs (time.sleep() value), this will only check the last block
-    #probability of this occuring is low, as zcash has an intended block time of 150 secs. but still a block would be missed like once a week
-    #TODO - rectify this
+    #this way has its drawbacks - if two or more blocks get mined in 120 secs (the time.sleep() value), this will only check the last block
+    #probability of this occuring is low, as zcash has an intended block time of 150 secs. but still a block would be missed like once a day
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         zcha_network_data = zcha_network_response.json()
@@ -404,10 +426,18 @@ while True:
         else:
             set_state = '0'
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
-        zcashd_block = block_info(zcha_last_block_hash, "1")
         zcha_last_block_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash, timeout=5)
         zcha_last_block = zcha_last_block_response.json()
-        zcha_block_props = (
+        zcha_transaction_hashes = []
+        for zcha_requests in range(int(zcha_last_block["transactions"]/20)+1):
+            offset = zcha_requests*20
+            zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
+            zcha_block_transactions = zcha_block_transactions_response.json()
+            for this_transaction in range(zcha_last_block["transactions"]):
+                zcha_transaction_hashes.append(zcha_block_transactions[this_transaction]["hash"])
+        zcha_transaction_hashes.sort()
+        zcashd_block_fields = zcashd_fields(zcha_block_height)
+        zcha_block_fields = (
             zcha_last_block["hash"],
             zcha_last_block["size"],
             zcha_last_block["height"],
@@ -417,26 +447,12 @@ while True:
             zcha_last_block["timestamp"],
             zcha_last_block["nonce"],
             zcha_last_block["solution"],
-            zcha_last_block["bits"]
+            zcha_last_block["bits"],
             zcha_last_block["chainWork"],
             zcha_last_block["prevHash"]
+            zcha_transaction_hashes
             )
-        zcashd_block_props =(
-            zcashd_block["hash"],
-            zcashd_block["size"],
-            zcashd_block["height"],
-            str(len(zcashd_block["tx"])),
-            zcashd_block["version"],
-            zcashd_block["merkleroot"],
-            zcashd_block["time"],
-            zcashd_block["nonce"],
-            zcashd_block["solution"],
-            zcashd_block["bits"],
-            zcashd_block["chainwork"],
-            zcashd_block["previousblockhash"]
-            )
-            #todo - transaction hash check
-        if zcha_block_props == zcashd_block_props:
+        if zcha_block_fields == zcashd_block_fields:
             set_state = '1'
         else:
             set_state = '0'
@@ -456,13 +472,14 @@ while True:
         zcash_difficulty = float(zcashd_blockchain_info_data["difficulty"])
         ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        while last_block_considered < zcashd_height:
-            count_of_type_of_transactions = transaction_type_check(last_block_considered+1)
+        while (last_block_considered < zcashd_height or slack_notification_counter == 0):
+            if slack_notification_counter > 0:
+                last_block_considered+=1
+            count_of_type_of_transactions = transaction_type_check(str(last_block_considered))
             transparent_transactions_in_block = count_of_type_of_transactions[0]
             TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE.set(transparent_transactions_in_block)
             shielded_transactions_in_block = count_of_type_of_transactions[1]
             SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE.set(shielded_transactions_in_block)
-            last_block_considered+=1
             time.sleep(5)
 
     except Exception as e:
