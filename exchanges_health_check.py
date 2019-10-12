@@ -435,7 +435,7 @@ while True:
             for this_transaction in range(zcha_last_block["transactions"]):
                 zcha_transaction_hashes.append(zcha_block_transactions[this_transaction]["hash"])
         zcha_transaction_hashes.sort()
-        zcashd_block_fields = zcashd_fields(zcha_block_height)
+        zcashd_block_fields = zcashd_fields(str(zcha_block_height))
         zcha_block_fields = (
             zcha_last_block["hash"],
             zcha_last_block["size"],
@@ -464,12 +464,12 @@ while True:
     #METRICS
     try:
         zcashd_blockchain_info_data = json.loads((zcashd_blockchain_info.stdout).strip())
-        if zcashd_blockchain_info_data["valuePools"][0]["monitored"] == "true":
+        if zcashd_blockchain_info_data["valuePools"][0]["monitored"] == True:
             sprout_value_pool = float(zcashd_blockchain_info_data["valuePools"][0]["chainValue"])
             SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
         else:
              send_slack_notification("zcashd node reindex required")
-        if zcashd_blockchain_info_data["valuePools"][1]["monitored"] == "true":
+        if zcashd_blockchain_info_data["valuePools"][1]["monitored"] == True:
             sapling_value_pool = float(zcashd_blockchain_info_data["valuePools"][1]["chainValue"])
             SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
         else:
