@@ -150,6 +150,10 @@ SAPLING_VALUE_POOL_GAUGE = Gauge('sapling_value_pool_gauge',
                                  'sapling_value_pool_gauge gauge')
 ZCASH_DIFFICULTY_GAUGE = Gauge('zcash_difficulty_gauge',
                                'zcash_difficulty_gauge gauge')
+TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE = Gauge('transparent_transactions_in_block_gauge',
+                                                'transparent_transactions_in_block_gauge gauge')
+SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE = Gauge('shielded_transactions_in_block_gauge',
+                                             'shielded_transactions_in_block_gauge gauge')
 
 USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE,

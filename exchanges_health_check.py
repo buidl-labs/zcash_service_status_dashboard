@@ -16,20 +16,37 @@ def notify_driver_health_check_issue(exception):
     send_slack_notification(message="Some issue in driver_health_check!")
     send_slack_notification(message=str(exception))
 
-
 def notify_exchange_error(exchange, exception):
     send_slack_notification(
         message="Something wrong or mismatching in {}'s response -> {}".format(
             exchange, exception
         )
     )
-def block_info(block_hash_or_height):
+
+def block_info(block_hash_or_height, verbose_identifier):
     try:
-        zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+        zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except Exception as e:
         notify_driver_health_check_issue(e)
     zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     return zcashd_block
+
+def transaction_type_check(block_hash_or_height):
+    block_data = block_info(block_hash_or_height, "2")
+    shielded_counter = 0
+    transparent_counter = 0
+    for this_transaction in range(len(block_data["tx"]))
+        if not (block_data["tx"][this_transaction]["vjoinsplit"] or block_data["tx"][this_transaction]["vShieldedOutput"] or block_data["tx"][this_transaction]["vShieldedSpend"]):
+            transparent_counter+=1
+        else:
+            shielded_counter+=1
+    return(transparent_counter,shielded_counter)
+
+try:
+    last_block_transactions_checked_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+except Exception as e:
+    notify_driver_health_check_issue(e)
+last_block_considered = int((last_block_transactions_checked_data.stdout).strip())
 
 slack_notification_counter = 0
 while True:
@@ -374,6 +391,9 @@ while True:
         notify_exchange_error("Coinjar", str(e))
 
     #ZCHA
+    #this way has its drawbacks - if two or more blocks get mined in 120 secs (time.sleep() value), this will only check the last block
+    #probability of this occuring is low, as zcash has an intended block time of 150 secs. but still a block would be missed like once a week
+    #TODO - rectify this
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         zcha_network_data = zcha_network_response.json()
@@ -384,7 +404,7 @@ while True:
         else:
             set_state = '0'
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
-        zcashd_block = block_info(zcha_last_block_hash)
+        zcashd_block = block_info(zcha_last_block_hash, "1")
         zcha_last_block_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash, timeout=5)
         zcha_last_block = zcha_last_block_response.json()
         zcha_block_props = (
@@ -415,12 +435,13 @@ while True:
             zcashd_block["chainwork"],
             zcashd_block["previousblockhash"]
             )
-        #TODO: check transactions
+            #todo - transaction hash check
         if zcha_block_props == zcashd_block_props:
             set_state = '1'
         else:
             set_state = '0'
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
+
     except Exception as e:
         notify_exchange_error("ZCHA", str(e))
         #TODO - separate function for Explorers required
@@ -434,6 +455,16 @@ while True:
         SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
         zcash_difficulty = float(zcashd_blockchain_info_data["difficulty"])
         ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
+        zcashd_height = int((zcashd_blockcount_data.stdout).strip())
+        while last_block_considered < zcashd_height:
+            count_of_type_of_transactions = transaction_type_check(last_block_considered+1)
+            transparent_transactions_in_block = count_of_type_of_transactions[0]
+            TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE.set(transparent_transactions_in_block)
+            shielded_transactions_in_block = count_of_type_of_transactions[1]
+            SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE.set(shielded_transactions_in_block)
+            last_block_considered+=1
+            time.sleep(5)
+
     except Exception as e:
         notify_exchange_error("VALUEPOOL", str(e))
         #TODO - separate function for Metrics required
