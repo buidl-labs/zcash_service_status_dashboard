@@ -35,7 +35,7 @@ def transaction_type_check(block_hash_or_height):
     block_data = block_info(block_hash_or_height, "2")
     shielded_counter = 0
     transparent_counter = 0
-    for this_transaction in range(len(block_data["tx"]))
+    for this_transaction in range(len(block_data["tx"])):
         if not (block_data["tx"][this_transaction]["vjoinsplit"] or block_data["tx"][this_transaction]["vShieldedOutput"] or block_data["tx"][this_transaction]["vShieldedSpend"]):
             transparent_counter+=1
         else:
