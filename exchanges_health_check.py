@@ -415,7 +415,6 @@ while True:
 
     #ZCHA
     #this way has its drawbacks - if two or more blocks get mined in 120 secs (the time.sleep() value), this will only check the last block
-    #probability of this occuring is low, as zcash has an intended block time of 150 secs. but still a block would be missed like once a day
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         zcha_network_data = zcha_network_response.json()
@@ -449,7 +448,7 @@ while True:
             zcha_last_block["solution"],
             zcha_last_block["bits"],
             zcha_last_block["chainWork"],
-            zcha_last_block["prevHash"]
+            zcha_last_block["prevHash"],
             zcha_transaction_hashes
             )
         if zcha_block_fields == zcashd_block_fields:
@@ -460,20 +459,30 @@ while True:
 
     except Exception as e:
         notify_exchange_error("ZCHA", str(e))
-        #TODO - separate function for Explorers required
+        #TODO - separate notification function for Explorers required
 
     #METRICS
     try:
         zcashd_blockchain_info_data = json.loads((zcashd_blockchain_info.stdout).strip())
-        sprout_value_pool = float(zcashd_blockchain_info_data["valuePools"][0]["chainValue"])
-        SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
-        sapling_value_pool = float(zcashd_blockchain_info_data["valuePools"][1]["chainValue"])
-        SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
+        if zcashd_blockchain_info_data["valuePools"][0]["monitored"] == "true":
+            sprout_value_pool = float(zcashd_blockchain_info_data["valuePools"][0]["chainValue"])
+            SPROUT_VALUE_POOL_GAUGE.set(sprout_value_pool)
+        else:
+             send_slack_notification("zcashd node reindex required")
+        if zcashd_blockchain_info_data["valuePools"][1]["monitored"] == "true":
+            sapling_value_pool = float(zcashd_blockchain_info_data["valuePools"][1]["chainValue"])
+            SAPLING_VALUE_POOL_GAUGE.set(sapling_value_pool)
+        else:
+             send_slack_notification("zcashd node reindex required")
         zcash_difficulty = float(zcashd_blockchain_info_data["difficulty"])
         ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        while (last_block_considered < zcashd_height or slack_notification_counter == 0):
-            if slack_notification_counter > 0:
+        if slack_notification_counter == 0:
+            first_iteration = True
+        while (last_block_considered < zcashd_height or first_iteration == True):
+            if first_iteration == True:
+                first_iteration = False
+            else:
                 last_block_considered+=1
             count_of_type_of_transactions = transaction_type_check(str(last_block_considered))
             transparent_transactions_in_block = count_of_type_of_transactions[0]
@@ -484,7 +493,7 @@ while True:
 
     except Exception as e:
         notify_exchange_error("VALUEPOOL", str(e))
-        #TODO - separate function for Metrics required
+        #TODO - separate notification function for Metrics required
 
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
                       bittrex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
