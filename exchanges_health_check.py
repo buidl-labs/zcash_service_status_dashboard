@@ -24,6 +24,7 @@ def notify_exchange_error(exchange, exception):
     )
 
 def block_info(block_hash_or_height, verbose_identifier):
+    """gets the block data from zcash-cli and returns a json object"""
     try:
         zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except Exception as e:
@@ -32,17 +33,20 @@ def block_info(block_hash_or_height, verbose_identifier):
     return zcashd_block
 
 def transaction_type_check(block_hash_or_height):
+    """counts the number of transparent and shielded transactions in a block and returns a tuple"""
     block_data = block_info(block_hash_or_height, "2")
     shielded_counter = 0
     transparent_counter = 0
     for this_transaction in range(len(block_data["tx"])):
         if not (block_data["tx"][this_transaction]["vjoinsplit"] or block_data["tx"][this_transaction]["vShieldedOutput"] or block_data["tx"][this_transaction]["vShieldedSpend"]):
+            #if all three fields are empty than the transaction is transparent
             transparent_counter+=1
         else:
             shielded_counter+=1
     return(transparent_counter,shielded_counter)
 
 def zcashd_fields(last_block_hash_or_height):
+    """returns a list of all the fields to be checked in a block in correct order"""
     zcashd_block = block_info(last_block_hash_or_height, "1")
     zcashd_transaction_hashes = []
     for this_transaction in range(len(zcashd_block["tx"])):
@@ -428,6 +432,7 @@ while True:
         zcha_last_block_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash, timeout=5)
         zcha_last_block = zcha_last_block_response.json()
         zcha_transaction_hashes = []
+        #zcha only returns a maximum of 20 transactions at a time
         for zcha_requests in range(int(zcha_last_block["transactions"]/20)+1):
             offset = zcha_requests*20
             zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
@@ -478,8 +483,10 @@ while True:
         ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         if slack_notification_counter == 0:
+            #in the first iteration, last_block_considered = zcashd_height, so the loop will not run
             first_iteration = True
         while (last_block_considered < zcashd_height or first_iteration == True):
+            #using this loop so that no block's transactions remain uncounted
             if first_iteration == True:
                 first_iteration = False
             else:
@@ -489,7 +496,7 @@ while True:
             TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE.set(transparent_transactions_in_block)
             shielded_transactions_in_block = count_of_type_of_transactions[1]
             SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE.set(shielded_transactions_in_block)
-            time.sleep(5)
+            time.sleep(5) #prometheus scrapes every 5 seconds, making sure every block gets counted
 
     except Exception as e:
         notify_exchange_error("VALUEPOOL", str(e))
