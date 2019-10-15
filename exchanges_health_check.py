@@ -419,6 +419,7 @@ while True:
 
     #ZCHA
     #this way has its drawbacks - if two or more blocks get mined in 120 secs (the time.sleep() value), this will only check the last block
+    zcha_last_block_hash = None
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         zcha_network_data = zcha_network_response.json()
@@ -429,10 +430,19 @@ while True:
         else:
             set_state = '0'
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
+    except Exception as e:
+        notify_exchange_error("ZCHA", str(e))
+        #TODO - separate notification function for Explorers required
+    
+    try:
         zcha_last_block_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash, timeout=5)
+    except Exception as e:
+        notify_exchange_error("ZCHA", str(e))
+
         zcha_last_block = zcha_last_block_response.json()
         zcha_transaction_hashes = []
         #zcha only returns a maximum of 20 transactions at a time
+    try:
         for zcha_requests in range(int(zcha_last_block["transactions"]/20)+1):
             offset = zcha_requests*20
             zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
@@ -499,7 +509,7 @@ while True:
             time.sleep(5) #prometheus scrapes every 5 seconds, making sure every block gets counted
 
     except Exception as e:
-        notify_exchange_error("VALUEPOOL", str(e))
+        notify_exchange_error("METRIC", str(e))
         #TODO - separate notification function for Metrics required
 
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
