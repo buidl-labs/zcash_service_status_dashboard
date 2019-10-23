@@ -84,6 +84,14 @@ last_block_considered = int((last_block_transactions_checked_data.stdout).strip(
 slack_notification_counter = 0
 while True:
 
+    zcha_network_response = None
+    try:
+        zcha_network_response = requests.get(url = ZCHA_NETWORK_URL, timeout = 5)
+    except:
+        exception_string = print_exception()
+        notify_metric_explorer_error("ZCHA NETWORK URL RESPONSE", str(exception_string))
+        pass
+
     #ZCASHD
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
@@ -99,8 +107,9 @@ while True:
         pass
 
     #ZCHA
+    #TODO - check for none values
     #this way has its drawbacks - if two or more blocks get mined in 30 secs (the time.sleep() value), this will only check the last block
-    zcha_last_block_hash = None
+    zcha_last_block_hash = zcha_last_block_response = None
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
         zcha_network_data = zcha_network_response.json()
@@ -121,9 +130,10 @@ while True:
         exception_string = print_exception()
         notify_metric_explorer_error("ZCHA", str(exception_string))
 
-        zcha_last_block = zcha_last_block_response.json()
-        zcha_transaction_hashes = []
-        #zcha only returns a maximum of 20 transactions at a time
+    zcha_last_block = zcha_last_block_response.json()
+    zcha_transaction_hashes = []
+    #zcha only returns a maximum of 20 transactions at a time
+    
     try:
         for zcha_requests in range(int(zcha_last_block["transactions"]/20)+1):
             offset = zcha_requests*20
