@@ -387,3 +387,4 @@ while True:
         send_slack_notification(
             message="{} iterations of exchanges health checks done!".format(slack_notification_counter))
     time.sleep(120)
+    
