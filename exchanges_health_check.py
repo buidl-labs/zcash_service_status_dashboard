@@ -28,8 +28,7 @@ slack_notification_counter = 0
 while True:
     # get the response for all exchanges asap, all at once to avoid time difference
     exmo_response = bitlish_response = bittrex_spot_price_zec_usd_response = \
-        bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = \
-        cex_zec_usd_response = cex_zec_btc_response = gemini_zec_usd_response = \
+        bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = gemini_zec_usd_response = \
         gemini_zec_btc_response = bitfinex_zec_usd_response = bitfinex_zec_btc_response = \
         binance_zec_btc_response = coinbase_zec_usd_response = \
         kraken_zec_usd_response = coinjar_zec_btc_response = None
@@ -58,16 +57,6 @@ while True:
     try:
         bittrex_transaction_volume_response = requests.get(
             url=BITTREX_TRANSACTION_VOLUME_URL, timeout=5)
-    except Exception as e:
-        notify_driver_health_check_issue(e)
-        pass
-    try:
-        cex_zec_usd_response = requests.get(url=CEX_ZEC_USD_URL, timeout=5)
-    except Exception as e:
-        notify_driver_health_check_issue(e)
-        pass
-    try:
-        cex_zec_btc_response = requests.get(url=CEX_ZEC_BTC_URL, timeout=5)
     except Exception as e:
         notify_driver_health_check_issue(e)
         pass
@@ -230,37 +219,6 @@ while True:
     except Exception as e:
         notify_exchange_error("Bitrex", str(e))
 
-    # CEX
-    try:
-        cex_zec_usd_data = cex_zec_usd_response.json()
-        cex_usd_spot_price = float(cex_zec_usd_data['last'])
-        cex_usd_transaction_volume = cex_zec_usd_data['volume']
-        cex_zec_btc_data = cex_zec_btc_response.json()
-        cex_btc_spot_price = float(cex_zec_btc_data['last'])
-        cex_btc_transaction_volume = cex_zec_btc_data['volume']
-        if cex_usd_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_SPOT_PRICE_USD_PORT.state(set_state)
-        if cex_btc_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_SPOT_PRICE_BTC_PORT.state(set_state)
-        if cex_usd_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_TRANSACTION_VOLUME_USD_PORT.state(set_state)
-        if cex_btc_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
-    except Exception as e:
-        notify_exchange_error("Bitrex", str(e))
-
     # Gemini
     try:
         gemini_zec_usd_data = gemini_zec_usd_response.json()
@@ -391,9 +349,9 @@ while True:
         notify_exchange_error("Coinjar", str(e))
 
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
-                      bittrex_usd_spot_price, cex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
+                      bittrex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
     spot_price_btc = [exmo_btc_spot_price, bitlish_btc_spot_price,
-                      bittrex_btc_spot_price, cex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
+                      bittrex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
     spot_price_median_usd = median(spot_price_usd)
     spot_price_median_btc = median(spot_price_btc)
     # Create a config of exchange: price for many use-cases
@@ -401,7 +359,6 @@ while True:
         "Exmo": exmo_usd_spot_price,
         "Bitlish": bitlish_usd_spot_price,
         "Bittrex": bittrex_usd_spot_price,
-        "Cex": cex_usd_spot_price,
         "Gemini": gemini_usd_spot_price,
         "Bitfinex": bitfinex_usd_spot_price,
         "Coinbase": coinbase_usd_spot_price,
@@ -411,7 +368,6 @@ while True:
         "Exmo": exmo_btc_spot_price,
         "Bitlish": bitlish_btc_spot_price,
         "Bittrex": bittrex_btc_spot_price,
-        "Cex": cex_btc_spot_price,
         "Gemini": gemini_btc_spot_price,
         "Bitfinex": bitfinex_btc_spot_price,
         "Binance": binance_btc_spot_price,
@@ -431,3 +387,4 @@ while True:
         send_slack_notification(
             message="{} iterations of exchanges health checks done!".format(slack_notification_counter))
     time.sleep(120)
+    
