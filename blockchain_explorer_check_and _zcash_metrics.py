@@ -11,6 +11,7 @@ from self_health_check.utils import send_slack_notification
 start_http_server(8093)
 
 def print_exception():
+    """returns the line number, line contents and the description of the last exception as a string"""
     exc_type, exc_obj, tb = sys.exc_info()
     f = tb.tb_frame
     lineno = tb.tb_lineno
