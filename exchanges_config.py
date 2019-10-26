@@ -21,7 +21,8 @@ EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE = Gauge('exmo_usd_spot_price_deviation_gauge
                                             'exmo_usd_spot_price_deviation_gauge gauge')
 EXMO_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('exmo_btc_spot_price_deviation_gauge',
                                             'exmo_btc_spot_price_deviation_gauge gauge')
-
+EXMO_USD_SPOT_PRICE_ABSOLUTE = Gauge('exmo_usd_spot_price_absolute', 'exmo_usd_spot_price_absolute_gauge')
+EXMO_BTC_SPOT_PRICE_ABSOLUTE = Gauge('exmo_btc_spot_price_absolute', 'exmo_btc_spot_price_absolute_gauge')
 
 # Bitlish Configs
 BITLISH_URL = "https://bitlish.com/api/v1/tickers"
