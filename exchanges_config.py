@@ -186,6 +186,8 @@ COINJAR_BTC_SPOT_PRICE_ABSOLUTE = Gauge(
 COINJAR_BTC_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
     'coinjar_btc_transaction_volume_absolute', 'coinjar_btc_transaction_volume_absolute_gauge')
 
+# Universal configs
+
 USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitlish": BITLISH_USD_SPOT_PRICE_DEVIATION_GAUGE,
@@ -244,3 +246,8 @@ ABSOLUTE_TRANSACTION_VOLUME_BTC_EXCHANGE = {
     "Binance": BINANCE_BTC_TRANSACTION_VOLUME_ABSOLUTE,
     "Coinjar": COINJAR_BTC_TRANSACTION_VOLUME_ABSOLUTE
 }
+
+MEDIAN_SPOT_PRICE_USD = Gauge(
+    'median_spot_price_usd', 'median_spot_price_usd_gauge')
+MEDIAN_SPOT_PRICE_BTC = Gauge(
+    'median_spot_price_btc', 'median_spot_price_btc_gauge')

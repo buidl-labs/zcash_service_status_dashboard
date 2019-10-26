@@ -354,6 +354,9 @@ while True:
                       bittrex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
     spot_price_median_usd = median(spot_price_usd)
     spot_price_median_btc = median(spot_price_btc)
+    MEDIAN_SPOT_PRICE_USD.set(spot_price_median_usd)
+    MEDIAN_SPOT_PRICE_BTC.set(spot_price_median_btc)
+
     # Create a config of exchange: price for many use-cases
     spot_price_usd_all_exchanges = {
         "Exmo": exmo_usd_spot_price,
