@@ -412,7 +412,7 @@ while True:
         ABSOLUTE_TRANSACTION_VOLUME_BTC_EXCHANGE[transaction_volume_btc].set(
             transaction_volume_btc_all_exchanges[transaction_volume_btc]
         )
-
+    print(slack_notification_counter)
     slack_notification_counter += 1
     if slack_notification_counter % 100 == 0:
         send_slack_notification(
