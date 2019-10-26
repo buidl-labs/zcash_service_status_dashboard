@@ -377,20 +377,44 @@ while True:
         change_percentage = abs(
             spot_price_usd_all_exchanges[exchange_usd_price] - spot_price_median_usd) / spot_price_median_usd * 100.0
         USD_EXCHANGE[exchange_usd_price].set(change_percentage)
-    EXMO_USD_SPOT_PRICE_ABSOLUTE.set(spot_price_usd_all_exchanges['Exmo'])
-    EXMO_BTC_SPOT_PRICE_ABSOLUTE.set(spot_price_btc_all_exchanges['Exmo'])
+        ABSOLUTE_PRICE_USD_EXCHANGE[exchange_usd_price].set(
+            spot_price_usd_all_exchanges[exchange_usd_price])
     for exchange_btc_price in spot_price_btc_all_exchanges.keys():
         change_percentage = abs(
             spot_price_btc_all_exchanges[exchange_btc_price] - spot_price_median_btc) / spot_price_median_btc * 100.0
         BTC_EXCHANGE[exchange_btc_price].set(change_percentage)
+        ABSOLUTE_PRICE_BTC_EXCHANGE[exchange_btc_price].set(
+            spot_price_btc_all_exchanges[exchange_btc_price])
+
+    # transaction volume
+    transaction_volume_usd_all_exchanges = {
+        "Exmo": exmo_usd_transaction_volume,
+        "Bitlish": bitlish_usd_transaction_volume,
+        "Bittrex": bittrex_usd_transaction_volume,
+        "Gemini": gemini_usd_transaction_volume,
+        "Bitfinex": bitfinex_usd_transaction_volume,
+        "Kraken": kraken_usd_transaction_volume
+    }
+    transaction_volume_btc_all_exchanges = {
+        "Exmo": exmo_btc_transaction_volume,
+        "Bitlish": bitlish_btc_transaction_volume,
+        "Bittrex": bittrex_btc_transaction_volume,
+        "Gemini": gemini_btc_transaction_volume,
+        "Bitfinex": bitfinex_btc_transaction_volume,
+        "Binance": binance_btc_transaction_volume,
+        "Coinjar": coinjar_btc_spot_price
+    }
+    for transaction_volume_usd in transaction_volume_usd_all_exchanges.keys():
+        ABSOLUTE_TRANSACTION_VOLUME_USD_EXCHANGE[transaction_volume_usd].set(
+            transaction_volume_usd_all_exchanges[transaction_volume_usd])
+
+    for transaction_volume_btc in transaction_volume_btc_all_exchanges.keys():
+        ABSOLUTE_TRANSACTION_VOLUME_BTC_EXCHANGE[transaction_volume_btc].set(
+            transaction_volume_btc_all_exchanges[transaction_volume_btc]
+        )
+
     slack_notification_counter += 1
-    print(slack_notification_counter)
     if slack_notification_counter % 100 == 0:
         send_slack_notification(
             message="{} iterations of exchanges health checks done!".format(slack_notification_counter))
-<<<<<<< HEAD
     time.sleep(150)
-=======
-    time.sleep(120)
-    
->>>>>>> 4799dab2c9ea662462650939f9b213fc082a7497
