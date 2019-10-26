@@ -232,34 +232,31 @@ while True:
 
     # CEX
     try:
-        cex_zec_usd_data = cex_zec_usd_response.json()
-        cex_usd_spot_price = float(cex_zec_usd_data['last'])
-        cex_usd_transaction_volume = cex_zec_usd_data['volume']
+        #cex_zec_usd_data = cex_zec_usd_response.json()
+        # cex_usd_spot_price = float(cex_zec_usd_data['last'])
+        # cex_usd_transaction_volume = cex_zec_usd_data['volume']
         cex_zec_btc_data = cex_zec_btc_response.json()
         cex_btc_spot_price = float(cex_zec_btc_data['last'])
         cex_btc_transaction_volume = cex_zec_btc_data['volume']
-        if cex_usd_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_SPOT_PRICE_USD_PORT.state(set_state)
+        # CEX_SPOT_PRICE_USD_PORT.state(set_state)
         if cex_btc_spot_price == 0:
             set_state = '0'
         else:
             set_state = '1'
         CEX_SPOT_PRICE_BTC_PORT.state(set_state)
-        if cex_usd_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_TRANSACTION_VOLUME_USD_PORT.state(set_state)
+        #if cex_usd_transaction_volume == 0:
+        #    set_state = '0'
+        #else:
+        #    set_state = '1'
+        #CEX_TRANSACTION_VOLUME_USD_PORT.state(set_state)
         if cex_btc_transaction_volume == 0:
             set_state = '0'
         else:
             set_state = '1'
         CEX_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
     except Exception as e:
-        notify_exchange_error("Bitrex", str(e))
+        pass
+	# notify_exchange_error("Cex", str(e))
 
     # Gemini
     try:
@@ -391,9 +388,9 @@ while True:
         notify_exchange_error("Coinjar", str(e))
 
     spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
-                      bittrex_usd_spot_price, cex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
+                      bittrex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
     spot_price_btc = [exmo_btc_spot_price, bitlish_btc_spot_price,
-                      bittrex_btc_spot_price, cex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
+                      bittrex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
     spot_price_median_usd = median(spot_price_usd)
     spot_price_median_btc = median(spot_price_btc)
     # Create a config of exchange: price for many use-cases
@@ -401,7 +398,6 @@ while True:
         "Exmo": exmo_usd_spot_price,
         "Bitlish": bitlish_usd_spot_price,
         "Bittrex": bittrex_usd_spot_price,
-        "Cex": cex_usd_spot_price,
         "Gemini": gemini_usd_spot_price,
         "Bitfinex": bitfinex_usd_spot_price,
         "Coinbase": coinbase_usd_spot_price,
@@ -411,7 +407,6 @@ while True:
         "Exmo": exmo_btc_spot_price,
         "Bitlish": bitlish_btc_spot_price,
         "Bittrex": bittrex_btc_spot_price,
-        "Cex": cex_btc_spot_price,
         "Gemini": gemini_btc_spot_price,
         "Bitfinex": bitfinex_btc_spot_price,
         "Binance": binance_btc_spot_price,
@@ -421,13 +416,15 @@ while True:
         change_percentage = abs(
             spot_price_usd_all_exchanges[exchange_usd_price] - spot_price_median_usd) / spot_price_median_usd * 100.0
         USD_EXCHANGE[exchange_usd_price].set(change_percentage)
+    EXMO_USD_SPOT_PRICE_ABSOLUTE.set(spot_price_usd_all_exchanges['Exmo'])
+    EXMO_BTC_SPOT_PRICE_ABSOLUTE.set(spot_price_btc_all_exchanges['Exmo'])
     for exchange_btc_price in spot_price_btc_all_exchanges.keys():
         change_percentage = abs(
             spot_price_btc_all_exchanges[exchange_btc_price] - spot_price_median_btc) / spot_price_median_btc * 100.0
         BTC_EXCHANGE[exchange_btc_price].set(change_percentage)
     slack_notification_counter += 1
     print(slack_notification_counter)
-    if slack_notification_counter % 30 == 0:
+    if slack_notification_counter % 100 == 0:
         send_slack_notification(
             message="{} iterations of exchanges health checks done!".format(slack_notification_counter))
-    time.sleep(120)
+    time.sleep(150)
