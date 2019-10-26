@@ -147,8 +147,6 @@ BINANCE_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('binance_btc_spot_price_deviation
                                                'binance_btc_spot_price_deviation_gauge gauge')
 BINANCE_BTC_SPOT_PRICE_ABSOLUTE = Gauge(
     'binance_btc_spot_price_absolute', 'binance_btc_spot_price_absolute_gauge')
-BINANCE_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('binance_btc_spot_price_deviation_gauge',
-                                               'binance_btc_spot_price_deviation_gauge gauge')
 BINANCE_BTC_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
     'binance_btc_transaction_volume_absolute', 'binance_btc_transaction_volume_absolute_gauge')
 
