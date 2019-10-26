@@ -60,6 +60,7 @@ scrape_configs:
         - https://www.zcashcommunity.com/
         - https://z.cash/
         - https://www.zfnd.org/
+        - https://explorer.zcha.in/
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

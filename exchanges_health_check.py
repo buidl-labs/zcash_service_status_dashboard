@@ -28,8 +28,7 @@ slack_notification_counter = 0
 while True:
     # get the response for all exchanges asap, all at once to avoid time difference
     exmo_response = bitlish_response = bittrex_spot_price_zec_usd_response = \
-        bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = \
-        cex_zec_usd_response = cex_zec_btc_response = gemini_zec_usd_response = \
+        bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = gemini_zec_usd_response = \
         gemini_zec_btc_response = bitfinex_zec_usd_response = bitfinex_zec_btc_response = \
         binance_zec_btc_response = coinbase_zec_usd_response = \
         kraken_zec_usd_response = coinjar_zec_btc_response = None
@@ -58,16 +57,6 @@ while True:
     try:
         bittrex_transaction_volume_response = requests.get(
             url=BITTREX_TRANSACTION_VOLUME_URL, timeout=5)
-    except Exception as e:
-        notify_driver_health_check_issue(e)
-        pass
-    try:
-        cex_zec_usd_response = requests.get(url=CEX_ZEC_USD_URL, timeout=5)
-    except Exception as e:
-        notify_driver_health_check_issue(e)
-        pass
-    try:
-        cex_zec_btc_response = requests.get(url=CEX_ZEC_BTC_URL, timeout=5)
     except Exception as e:
         notify_driver_health_check_issue(e)
         pass
@@ -229,34 +218,6 @@ while True:
         BITTREX_SPOT_PRICE_BTC_PORT.state(set_state)
     except Exception as e:
         notify_exchange_error("Bitrex", str(e))
-
-    # CEX
-    try:
-        #cex_zec_usd_data = cex_zec_usd_response.json()
-        # cex_usd_spot_price = float(cex_zec_usd_data['last'])
-        # cex_usd_transaction_volume = cex_zec_usd_data['volume']
-        cex_zec_btc_data = cex_zec_btc_response.json()
-        cex_btc_spot_price = float(cex_zec_btc_data['last'])
-        cex_btc_transaction_volume = cex_zec_btc_data['volume']
-        # CEX_SPOT_PRICE_USD_PORT.state(set_state)
-        if cex_btc_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_SPOT_PRICE_BTC_PORT.state(set_state)
-        #if cex_usd_transaction_volume == 0:
-        #    set_state = '0'
-        #else:
-        #    set_state = '1'
-        #CEX_TRANSACTION_VOLUME_USD_PORT.state(set_state)
-        if cex_btc_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        CEX_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
-    except Exception as e:
-        pass
-	# notify_exchange_error("Cex", str(e))
 
     # Gemini
     try:
@@ -427,4 +388,9 @@ while True:
     if slack_notification_counter % 100 == 0:
         send_slack_notification(
             message="{} iterations of exchanges health checks done!".format(slack_notification_counter))
+<<<<<<< HEAD
     time.sleep(150)
+=======
+    time.sleep(120)
+    
+>>>>>>> 4799dab2c9ea662462650939f9b213fc082a7497
