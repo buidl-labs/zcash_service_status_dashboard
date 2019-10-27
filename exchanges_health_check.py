@@ -316,7 +316,7 @@ while True:
         kraken_zec_usd_data = kraken_zec_usd_response.json()[
             'result']['XZECZUSD']
         kraken_usd_spot_price = float(kraken_zec_usd_data['c'][0])
-        kraken_usd_transaction_volume = float(kraken_zec_usd_data['c'][1])
+        kraken_usd_transaction_volume = float(kraken_zec_usd_data['v'][1])
         if kraken_usd_spot_price == 0:
             set_state = '0'
         else:
