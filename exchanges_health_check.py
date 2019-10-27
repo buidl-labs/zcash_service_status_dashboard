@@ -151,24 +151,24 @@ while True:
     try:
         bitlish_data = bitlish_response.json()
         # setting transaction volume in USD
-        bitlish_usd_transaction_volume = bitlish_data['zecusd']['updated']
+        # bitlish_usd_transaction_volume = bitlish_data['zecusd']['updated']
         # setting zec_usd spot price
         bitlish_usd_spot_price = float(bitlish_data['zecusd']['last'])
         # setting transaction volume in BTC
-        bitlish_btc_transaction_volume = bitlish_data['zecbtc']['updated']
+        # bitlish_btc_transaction_volume = bitlish_data['zecbtc']['updated']
         # setting zec_btc spot price
         bitlish_btc_spot_price = float(bitlish_data['zecbtc']['last'])
         # plotting usd and btc transaction volume and spot price
-        if bitlish_usd_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        BITLISH_TRANSACTION_VOLUME_USD_PORT.state(set_state)
-        if bitlish_btc_transaction_volume == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        BITLISH_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
+        # if bitlish_usd_transaction_volume == 0:
+        #     set_state = '0'
+        # else:
+        #     set_state = '1'
+        # BITLISH_TRANSACTION_VOLUME_USD_PORT.state(set_state)
+        # if bitlish_btc_transaction_volume == 0:
+        #     set_state = '0'
+        # else:
+        #     set_state = '1'
+        # BITLISH_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
         if bitlish_usd_spot_price == 0:
             set_state = '0'
         else:
@@ -392,7 +392,6 @@ while True:
     # transaction volume
     transaction_volume_usd_all_exchanges = {
         "Exmo": exmo_usd_transaction_volume,
-        "Bitlish": bitlish_usd_transaction_volume,
         "Bittrex": bittrex_usd_transaction_volume,
         "Gemini": gemini_usd_transaction_volume,
         "Bitfinex": bitfinex_usd_transaction_volume,
@@ -400,7 +399,6 @@ while True:
     }
     transaction_volume_btc_all_exchanges = {
         "Exmo": exmo_btc_transaction_volume,
-        "Bitlish": bitlish_btc_transaction_volume,
         "Bittrex": bittrex_btc_transaction_volume,
         "Gemini": gemini_btc_transaction_volume,
         "Bitfinex": bitfinex_btc_transaction_volume,
