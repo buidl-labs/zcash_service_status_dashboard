@@ -405,7 +405,7 @@ while True:
         "Gemini": gemini_btc_transaction_volume,
         "Bitfinex": bitfinex_btc_transaction_volume,
         "Binance": binance_btc_transaction_volume,
-        "Coinjar": coinjar_btc_spot_price
+        "Coinjar": coinjar_btc_transaction_volume
     }
     for transaction_volume_usd in transaction_volume_usd_all_exchanges.keys():
         ABSOLUTE_TRANSACTION_VOLUME_USD_EXCHANGE[transaction_volume_usd].set(
