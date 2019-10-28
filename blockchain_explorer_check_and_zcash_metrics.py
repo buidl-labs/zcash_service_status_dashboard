@@ -77,10 +77,10 @@ def zcashd_fields(last_block_hash_or_height):
 
 try:
     last_block_transactions_checked_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+    last_block_considered = int((last_block_transactions_checked_data.stdout).strip())
 except:
         exception_string = print_exception()
         notify_metric_explorer_error("ZCASHD", str(exception_string))
-last_block_considered = int((last_block_transactions_checked_data.stdout).strip())
 
 slack_notification_counter = 0
 while True:
@@ -131,7 +131,12 @@ while True:
         exception_string = print_exception()
         notify_metric_explorer_error("ZCHA", str(exception_string))
 
-    zcha_last_block = zcha_last_block_response.json()
+    try:
+        zcha_last_block = zcha_last_block_response.json()
+    except:
+        exception_string = print_exception()
+        notify_metric_explorer_error("ZCHA", str(exception_string))
+
     zcha_transaction_hashes = []
     #zcha only returns a maximum of 20 transactions at a time
     
