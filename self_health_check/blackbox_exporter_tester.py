@@ -2,7 +2,7 @@ from time import sleep
 
 import requests
 
-from .config import BLACKBOX_EXPORTER_URL
+from .static_url import BLACKBOX_EXPORTER_URL
 from .utils import send_slack_notification
 
 

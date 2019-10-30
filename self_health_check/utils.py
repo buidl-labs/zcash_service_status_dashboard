@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from .config import SLACK_URL
+from .static_url import SLACK_URL
 
 
 def send_slack_notification(message):
