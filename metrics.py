@@ -5,7 +5,7 @@ import requests
 import linecache
 import sys
 from prometheus_client import (Enum, Gauge, Histogram, Summary, start_http_server)
-from configs.metrics import *
+from configs.metrics_config import *
 from self_health_check.utils import send_slack_notification
 
 start_http_server(8094)

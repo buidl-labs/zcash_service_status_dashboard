@@ -1,10 +1,8 @@
 import os
 from datetime import datetime
 
-from prometheus_client import (Enum, Gauge, Histogram, Summary,
-                               start_http_server)
+from prometheus_client import (Enum, Gauge, Histogram, Summary, start_http_server)
 
-ZCHA_NETWORK_URL = "https://api.zcha.in/v2/mainnet/network"
 ZCHA_BLOCK_URL = "https://api.zcha.in/v2/mainnet/blocks/"
 ZCHA_BLOCK_HEIGHT_PORT = Enum(
     'zcha_block_height_check', 'ZCHA Block Height Check', states=['1', '0'])
