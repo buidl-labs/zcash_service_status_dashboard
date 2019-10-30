@@ -22,7 +22,7 @@ def print_exception():
 
 def notify_metric_explorer_error(identifier, exception_string):
     send_slack_notification(
-    	message="Exception occured in {} in blockchain_explorers_health_check.py file. Exception in {}".format(identifier, exception_string))
+        message="Exception occured in {} in blockchain_explorers_health_check.py file. Exception in {}".format(identifier, exception_string))
 
 def block_info(block_hash_or_height, verbose_identifier):
     """gets the block data from zcash-cli and returns a json object"""
@@ -64,53 +64,53 @@ slack_notification_counter = 0
 
 while True:
 
-	#ZCASHD
+    #ZCASHD
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
-    	zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-    	zcashd_block_fields = zcashd_fields(zcashd_height)
+        zcashd_height = int((zcashd_blockcount_data.stdout).strip())
+        zcashd_block_fields = zcashd_fields(zcashd_height)
     except:
         exception_string = print_exception()
         notify_metric_explorer_error("ZCASHD", str(exception_string))
         pass
 
     if(last_block_considered == zcashd_height):
-    	time.sleep(5)
-    	continue
+        time.sleep(5)
+        continue
 
     #ZCHA
     zcha_block_response = zcha_block = None
     try:
-    	zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
-    	zcha_block = zcha_block_response.json()
+        zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        zcha_block = zcha_block_response.json()
         if zcha_block["error"] == "Block not found.":
-        	time.sleep(5)
-        	zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
-        	zcha_block = zcha_block_response.json()
+            time.sleep(5)
+            zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+            zcha_block = zcha_block_response.json()
         if zcashd_height == zcha_block["height"]:
             set_state = '1'
         else:
-        	set_state = '0'
+            set_state = '0'
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
     
-    	zcha_transaction_hashes = []
+        zcha_transaction_hashes = []
 
-    	#zcha only returns a maximum of 20 transactions at a time
-       	for zcha_requests in range(int(zcha_block["transactions"]/20)+1):
-       	    offset = zcha_requests*20
-           	zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
-       	    zcha_block_transactions = zcha_block_transactions_response.json()
-       	    for this_transaction in range(zcha_block["transactions"]):
-       	       zcha_transaction_hashes.append(zcha_block_transactions[this_transaction]["hash"])
-   	    zcha_transaction_hashes.sort()
-   	    zcha_block_fields = (
-     	    zcha_block["hash"],
-     	    zcha_block["size"],
+        #zcha only returns a maximum of 20 transactions at a time
+        for zcha_requests in range(int(zcha_block["transactions"]/20)+1):
+            offset = zcha_requests*20
+            zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
+            zcha_block_transactions = zcha_block_transactions_response.json()
+            for this_transaction in range(zcha_block["transactions"]):
+               zcha_transaction_hashes.append(zcha_block_transactions[this_transaction]["hash"])
+        zcha_transaction_hashes.sort()
+        zcha_block_fields = (
+            zcha_block["hash"],
+            zcha_block["size"],
             zcha_block["height"],
-   	        zcha_block["transactions"],
-     	    zcha_block["version"],
+            zcha_block["transactions"],
+            zcha_block["version"],
             zcha_block["merkleRoot"],
-   	        zcha_block["timestamp"],
+            zcha_block["timestamp"],
             zcha_block["nonce"],
             zcha_block["solution"],
             zcha_block["bits"],
@@ -118,23 +118,23 @@ while True:
             zcha_block["prevHash"],
             zcha_transaction_hashes
             )
-       	if zcha_block_fields == zcashd_block_fields:
-       	    set_state = '1'
-       	else:
-          	set_state = '0'
+        if zcha_block_fields == zcashd_block_fields:
+            set_state = '1'
+        else:
+            set_state = '0'
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
-    	if(zcha_block_response == None):
-    		send_slack_notification(message="zcha_block_response is empty")	
-    	else:	
-        	exception_string = print_exception()
-        	notify_metric_explorer_error("ZCHA", str(exception_string))
+        if(zcha_block_response == None):
+            send_slack_notification(message="zcha_block_response is empty")	
+        else:
+            exception_string = print_exception()
+            notify_metric_explorer_error("ZCHA", str(exception_string))
     
     if(last_block_considered == None):
-    	last_block_considered = zcashd_height
+        last_block_considered = zcashd_height
 
     elif last_block_considered < zcashd_height:
-    	last_block_considered+=1
+        last_block_considered+=1
 
     slack_notification_counter += 1
     print(slack_notification_counter)
