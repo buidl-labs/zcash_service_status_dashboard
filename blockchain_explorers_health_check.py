@@ -20,7 +20,7 @@ def print_exception():
     line = linecache.getline(filename, lineno, f.f_globals)
     return '(LINE {} "{}"): {}'.format(lineno, line.strip(), exc_obj)
 
-def notify_metric_explorer_error(identifier, exception_string):
+def notify_explorer_error(identifier, exception_string):
     send_slack_notification(
         message="Exception occured in {} in blockchain_explorers_health_check.py file. Exception in {}".format(identifier, exception_string))
 
@@ -30,7 +30,7 @@ def block_info(block_hash_or_height, verbose_identifier):
         zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
+        notify_explorer_error("ZCASHD", str(exception_string))
 
     zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     return zcashd_block
@@ -68,11 +68,11 @@ while True:
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        zcashd_block_fields = zcashd_fields(zcashd_height)
+        zcashd_block_fields = zcashd_fields(str(zcashd_height))
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
-        pass
+        notify_explorer_error("ZCASHD", str(exception_string))
+        continue
 
     if(last_block_considered == zcashd_height):
         time.sleep(5)
@@ -125,11 +125,143 @@ while True:
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(zcha_block_response == None):
-            send_slack_notification(message="zcha_block_response is empty")	
+            send_slack_notification(message="zcha_block_response is empty") 
         else:
             exception_string = print_exception()
-            notify_metric_explorer_error("ZCHA", str(exception_string))
+            notify_explorer_error("ZCHA", str(exception_string))
     
+    #ZCASHNETWORKINFO
+    zcashnetworkinfo_block_response = zcashnetworkinfo_block = None
+    try:
+        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        if zcashnetworkinfo_block_response.status_code != 200:
+            time.sleep(5)
+            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+        zcashnetworkinfo_block = zcashnetworkinfo_block_response.json()
+        if zcashd_height == zcashnetworkinfo_block["height"]:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state(set_state)
+
+        zcashnetworkinfo_transaction_hashes = zcashnetworkinfo_block["tx"]
+        zcashnetworkinfo_transaction_hashes.sort()
+        zcashnetworkinfo_block_fields = (
+            zcashnetworkinfo_block["hash"],
+            zcashnetworkinfo_block["size"],
+            zcashnetworkinfo_block["height"],
+            len(zcashnetworkinfo_block["tx"]),
+            zcashnetworkinfo_block["version"],
+            zcashnetworkinfo_block["merkleroot"],
+            zcashnetworkinfo_block["time"],
+            zcashnetworkinfo_block["nonce"],
+            zcashnetworkinfo_block["solution"],
+            zcashnetworkinfo_block["bits"],
+            zcashnetworkinfo_block["chainwork"],
+            zcashnetworkinfo_block["previousblockhash"],
+            zcashnetworkinfo_transaction_hashes
+            )
+
+        if zcashnetworkinfo_block_fields == zcashd_block_fields:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state(set_state)
+    except:
+        if(zcashnetworkinfo_block_response == None):
+            send_slack_notification(message="zcashnetworkinfo_block_response is empty") 
+        else:
+            exception_string = print_exception()
+            notify_explorer_error("ZCASHNETWORKINFO", str(exception_string))    
+
+    #ZECMATE
+    zecmate_block_response = zecmate_block = None
+    try:
+        zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        if zecmate_block_response.status_code != 200:
+            time.sleep(5)
+            zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+        zecmate_block = zecmate_block_response.json()
+        if zcashd_height == zecmate_block["height"]:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZECMATE_BLOCK_HEIGHT_PORT.state(set_state)
+
+        zecmate_transaction_hashes = zecmate_block["tx"]
+        zecmate_transaction_hashes.sort()
+        zecmate_block_fields = (
+            zecmate_block["hash"],
+            zecmate_block["size"],
+            zecmate_block["height"],
+            len(zecmate_block["tx"]),
+            zecmate_block["version"],
+            zecmate_block["merkleroot"],
+            zecmate_block["time"],
+            zecmate_block["nonce"],
+            zecmate_block["solution"],
+            zecmate_block["bits"],
+            zecmate_block["chainwork"],
+            zecmate_block["previousblockhash"],
+            zecmate_transaction_hashes
+            )
+
+        if zecmate_block_fields == zcashd_block_fields:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZECMATE_LAST_BLOCK_CHECK_PORT.state(set_state)
+    except:
+        if(zecmate_block_response == None):
+            send_slack_notification(message="zecmate_block_response is empty") 
+        else:
+            exception_string = print_exception()
+            notify_explorer_error("ZECMATE", str(exception_string))  
+
+    #ZCASHFR
+    zcashfr_block_response = zcashfr_block = None
+    try:
+        zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        if zcashfr_block_response.status_code != 200:
+            time.sleep(5)
+            zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+        zcashfr_block = zcashfr_block_response.json()
+        if zcashd_height == zcashfr_block["height"]:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCASHFR_BLOCK_HEIGHT_PORT.state(set_state)
+
+        zcashfr_transaction_hashes = zcashfr_block["tx"]
+        zcashfr_transaction_hashes.sort()
+        zcashfr_block_fields = (
+            zcashfr_block["hash"],
+            zcashfr_block["size"],
+            zcashfr_block["height"],
+            len(zcashfr_block["tx"]),
+            zcashfr_block["version"],
+            zcashfr_block["merkleroot"],
+            zcashfr_block["time"],
+            zcashfr_block["nonce"],
+            zcashfr_block["solution"],
+            zcashfr_block["bits"],
+            zcashfr_block["chainwork"],
+            zcashfr_block["previousblockhash"],
+            zcashfr_transaction_hashes
+            )
+
+        if zcashfr_block_fields == zcashd_block_fields:
+            set_state = '1'
+        else:
+            set_state = '0'
+        ZCASHFR_LAST_BLOCK_CHECK_PORT.state(set_state)
+    except:
+        if(zcashfr_block_response == None):
+            send_slack_notification(message="zcashfr_block_response is empty") 
+        else:
+            exception_string = print_exception()
+            notify_explorer_error("ZCASHFR", str(exception_string))  
+
     if(last_block_considered == None):
         last_block_considered = zcashd_height
 
@@ -140,4 +272,4 @@ while True:
     print(slack_notification_counter)
     if slack_notification_counter % 30 == 0:
         send_slack_notification(
-            message="{} iterations of blockchain explorer/metrics done!".format(slack_notification_counter))
+            message="{} iterations of blockchain_explorers_health_check.py done!".format(slack_notification_counter))
