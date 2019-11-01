@@ -35,28 +35,44 @@ def block_info(block_hash_or_height, verbose_identifier):
     zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     return zcashd_block
 
-def zcashd_fields(last_block_hash_or_height):
+def zcashd_fields(last_block_hash_or_height, fields_identifier):
     """returns a list of all the fields to be checked in a block in correct order"""
     zcashd_block = block_info(last_block_hash_or_height, "1")
     zcashd_transaction_hashes = []
     for this_transaction in range(len(zcashd_block["tx"])):
         zcashd_transaction_hashes.append(zcashd_block["tx"][this_transaction])
     zcashd_transaction_hashes.sort()
-    zcashd_block_fields =(
-        zcashd_block["hash"],
-        zcashd_block["size"],
-        zcashd_block["height"],
-        len(zcashd_block["tx"]),
-        zcashd_block["version"],
-        zcashd_block["merkleroot"],
-        zcashd_block["time"],
-        zcashd_block["nonce"],
-        zcashd_block["solution"],
-        zcashd_block["bits"],
-        zcashd_block["chainwork"],
-        zcashd_block["previousblockhash"],
-        zcashd_transaction_hashes
-        )
+    if fields_identifier == 1:
+        zcashd_block_fields =(
+            zcashd_block["hash"],
+            zcashd_block["size"],
+            zcashd_block["height"],
+            len(zcashd_block["tx"]),
+            zcashd_block["version"],
+            zcashd_block["merkleroot"],
+            zcashd_block["time"],
+            zcashd_block["nonce"],
+            zcashd_block["solution"],
+            zcashd_block["bits"],
+            zcashd_block["chainwork"],
+            zcashd_block["previousblockhash"],
+            zcashd_transaction_hashes
+            )
+    if fields_identifier == 1:
+        zcashd_block_fields =(
+            zcashd_block["hash"],
+            zcashd_block["size"],
+            zcashd_block["height"],
+            len(zcashd_block["tx"]),
+            zcashd_block["version"],
+            zcashd_block["merkleroot"],
+            zcashd_block["time"],
+            zcashd_block["nonce"],
+            zcashd_block["bits"],
+            zcashd_block["previousblockhash"],
+            zcashd_transaction_hashes
+            )
+
     return zcashd_block_fields
 
 last_block_considered = None
@@ -68,7 +84,8 @@ while True:
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        zcashd_block_fields = zcashd_fields(str(zcashd_height))
+        zcashd_block_fields = zcashd_fields(str(zcashd_height, 1))
+        zcashd_block_fields_second_variation = zcashd_fields(str(zcashd_height, 2))
     except:
         exception_string = print_exception()
         notify_explorer_error("ZCASHD", str(exception_string))
@@ -260,7 +277,95 @@ while True:
             send_slack_notification(message="zcashfr_block_response is empty") 
         else:
             exception_string = print_exception()
-            notify_explorer_error("ZCASHFR", str(exception_string))  
+            notify_explorer_error("ZCASHFR", str(exception_string))
+
+    #CHAINSO
+    chainso_block_response = chainso_block = None
+    try:
+        chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=12)
+        if chainso_block_response.status_code != 200:
+            time.sleep(5)
+            chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=12)
+        chainso_block = chainso_block_response.json()
+        if zcashd_height == chainso_block["data"]["block_no"]:
+            set_state = '1'
+        else:
+            set_state = '0'
+        CHAINSO_BLOCK_HEIGHT_PORT.state(set_state)
+
+        chainso_transaction_hashes = []
+        for this_transaction in range(len(chainso_block["data"]["txs"])):
+            chainso_transaction_hashes.append(chainso_block["data"]["txs"][this_transaction]["txid"])
+        chainso_transaction_hashes.sort()
+        chainso_block_fields = (
+            chainso_block["data"]["blockhash"],
+            chainso_block["data"]["size"],
+            chainso_block["data"]["block_no"],
+            (len(chainso_block["data"]["txs"])),
+            chainso_block["data"]["version"],
+            chainso_block["data"]["merkleroot"],
+            chainso_block["data"]["time"],
+            chainso_block["data"]["nonce"],
+            chainso_block["data"]["bits"],
+            chainso_block["data"]["previous_blockhash"],
+            chainso_transaction_hashes
+            )
+
+        if chainso_block_fields == zcashd_block_fields_second_variation:
+            set_state = '1'
+        else:
+            set_state = '0'
+        CHAINSO_LAST_BLOCK_CHECK_PORT.state(set_state)
+    except:
+        if(chainso_block_response == None):
+            send_slack_notification(message="chainso_block_response is empty") 
+        else:
+            exception_string = print_exception()
+            notify_explorer_error("CHAINSO", str(exception_string))
+
+    #NETDNA
+    netdna_block_response = netdna_block = None
+    try:
+        netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=5)
+        if netdna_block_response.status_code != 200:
+            time.sleep(5)
+            netdna_block_response = requests.get(url=NETDNA_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=5)
+        netdna_block = netdna_block_response.json()
+        if zcashd_height == netdna_block["data"]["block_no"]:
+            set_state = '1'
+        else:
+            set_state = '0'
+        NETDNA_BLOCK_HEIGHT_PORT.state(set_state)
+
+        netdna_transaction_hashes = []
+        for this_transaction in range(len(netdna_block["data"]["txs"])):
+            netdna_transaction_hashes.append(netdna_block["data"]["txs"][this_transaction]["txid"])
+        netdna_transaction_hashes.sort()
+        netdna_block_fields = (
+            netdna_block["data"]["blockhash"],
+            netdna_block["data"]["size"],
+            netdna_block["data"]["block_no"],
+            (len(netdna_block["data"]["txs"])),
+            netdna_block["data"]["version"],
+            netdna_block["data"]["merkleroot"],
+            netdna_block["data"]["time"],
+            netdna_block["data"]["nonce"],
+            netdna_block["data"]["bits"],
+            netdna_block["data"]["previous_blockhash"],
+            netdna_transaction_hashes
+            )
+
+        if netdna_block_fields == zcashd_block_fields_second_variation:
+            set_state = '1'
+        else:
+            set_state = '0'
+        NETDNA_LAST_BLOCK_CHECK_PORT.state(set_state)
+    except:
+        if(netdna_block_response == None):
+            send_slack_notification(message="netdna_block_response is empty") 
+        else:
+            exception_string = print_exception()
+            notify_explorer_error("NETDNA", str(exception_string))
 
     if(last_block_considered == None):
         last_block_considered = zcashd_height
