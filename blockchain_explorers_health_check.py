@@ -98,7 +98,7 @@ while True:
         #zcha only returns a maximum of 20 transactions at a time
         for zcha_requests in range(int(zcha_block["transactions"]/20)+1):
             offset = zcha_requests*20
-            zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcha_last_block_hash + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
+            zcha_block_transactions_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0] + "/transactions?limit=20&offset={}&sort=index&direction=ascending".format(offset), timeout=5)
             zcha_block_transactions = zcha_block_transactions_response.json()
             for this_transaction in range(zcha_block["transactions"]):
                zcha_transaction_hashes.append(zcha_block_transactions[this_transaction]["hash"])
