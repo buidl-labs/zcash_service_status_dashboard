@@ -81,11 +81,11 @@ while True:
     #ZCHA
     zcha_block_response = zcha_block = None
     try:
-        zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
         zcha_block = zcha_block_response.json()
-        if zcha_block["error"] == "Block not found.":
+        if zcha_block_response.status_code != 200:
             time.sleep(5)
-            zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+            zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
             zcha_block = zcha_block_response.json()
         if zcashd_height == zcha_block["height"]:
             set_state = '1'
@@ -133,10 +133,10 @@ while True:
     #ZCASHNETWORKINFO
     zcashnetworkinfo_block_response = zcashnetworkinfo_block = None
     try:
-        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=5)
         if zcashnetworkinfo_block_response.status_code != 200:
             time.sleep(5)
-            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
         zcashnetworkinfo_block = zcashnetworkinfo_block_response.json()
         if zcashd_height == zcashnetworkinfo_block["height"]:
             set_state = '1'
@@ -177,10 +177,10 @@ while True:
     #ZECMATE
     zecmate_block_response = zecmate_block = None
     try:
-        zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields[0], timeout=5)
         if zecmate_block_response.status_code != 200:
             time.sleep(5)
-            zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+            zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
         zecmate_block = zecmate_block_response.json()
         if zcashd_height == zecmate_block["height"]:
             set_state = '1'
@@ -221,10 +221,10 @@ while True:
     #ZCASHFR
     zcashfr_block_response = zcashfr_block = None
     try:
-        zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields["hash"], timeout=5)
+        zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields[0], timeout=5)
         if zcashfr_block_response.status_code != 200:
             time.sleep(5)
-            zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL+ zcashd_block_fields["hash"], timeout=5)
+            zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
         zcashfr_block = zcashfr_block_response.json()
         if zcashd_height == zcashfr_block["height"]:
             set_state = '1'
