@@ -32,3 +32,9 @@ ZCASHFR_BLOCK_HEIGHT_PORT = Enum(
     'zcashfr_block_height_check', 'ZCASHFR Block Height Check', states=['1', '0'])
 ZCASHFR_LAST_BLOCK_CHECK_PORT = Enum(
     'zcashfr_last_block_check', 'ZCASHFR LAST BLOCK CHECK', states=['1', '0'])
+
+NETDNA_BLOCK_URL = "https://live-sochain-blockioinc.netdna-ssl.com/api/v2/block/ZEC/"
+NETDNA_BLOCK_HEIGHT_PORT = Enum(
+    'netdna_block_height_check', 'NETDNA Block Height Check', states=['1', '0'])
+NETDNA_LAST_BLOCK_CHECK_PORT = Enum(
+    'netdna_last_block_check', 'NETDNA LAST BLOCK CHECK', states=['1', '0'])
