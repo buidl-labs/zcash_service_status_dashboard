@@ -58,7 +58,7 @@ def zcashd_fields(last_block_hash_or_height, fields_identifier):
             zcashd_block["previousblockhash"],
             zcashd_transaction_hashes
             )
-    if fields_identifier == 1:
+    if fields_identifier == 2:
         zcashd_block_fields =(
             zcashd_block["hash"],
             zcashd_block["size"],
@@ -84,8 +84,8 @@ while True:
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        zcashd_block_fields = zcashd_fields(str(zcashd_height, 1))
-        zcashd_block_fields_second_variation = zcashd_fields(str(zcashd_height, 2))
+        zcashd_block_fields = zcashd_fields(zcashd_height, 1)
+        zcashd_block_fields_second_variation = zcashd_fields(zcashd_height, 2)
     except:
         exception_string = print_exception()
         notify_explorer_error("ZCASHD", str(exception_string))
@@ -96,6 +96,7 @@ while True:
         continue
 
     #ZCHA
+    zcha_block_height_not_correct = False
     zcha_block_response = zcha_block = None
     try:
         zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
@@ -108,6 +109,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            zcha_block_height_not_correct = True
         ZCHA_BLOCK_HEIGHT_PORT.state(set_state)
     
         zcha_transaction_hashes = []
@@ -135,19 +137,22 @@ while True:
             zcha_block["prevHash"],
             zcha_transaction_hashes
             )
-        if zcha_block_fields == zcashd_block_fields:
+        if zcha_block_fields == zcashd_block_fields and zcha_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(zcha_block_response == None):
-            send_slack_notification(message="zcha_block_response is empty") 
+            send_slack_notification(message="zcha_block_response is empty")
+            ZCHA_BLOCK_HEIGHT_PORT.state('0')
+            ZCHA_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCHA", str(exception_string))
     
     #ZCASHNETWORKINFO
+    zcashnetworkinfo_block_height_not_correct = False
     zcashnetworkinfo_block_response = zcashnetworkinfo_block = None
     try:
         zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=5)
@@ -159,6 +164,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            zcashnetworkinfo_block_height_not_correct = True
         ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state(set_state)
 
         zcashnetworkinfo_transaction_hashes = zcashnetworkinfo_block["tx"]
@@ -179,19 +185,22 @@ while True:
             zcashnetworkinfo_transaction_hashes
             )
 
-        if zcashnetworkinfo_block_fields == zcashd_block_fields:
+        if zcashnetworkinfo_block_fields == zcashd_block_fields and zcashnetworkinfo_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(zcashnetworkinfo_block_response == None):
-            send_slack_notification(message="zcashnetworkinfo_block_response is empty") 
+            send_slack_notification(message="zcashnetworkinfo_block_response is empty")
+            ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state('0')
+            ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCASHNETWORKINFO", str(exception_string))    
 
     #ZECMATE
+    zecmate_block_height_not_correct = False
     zecmate_block_response = zecmate_block = None
     try:
         zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields[0], timeout=5)
@@ -203,6 +212,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            zecmate_block_height_not_correct = True
         ZECMATE_BLOCK_HEIGHT_PORT.state(set_state)
 
         zecmate_transaction_hashes = zecmate_block["tx"]
@@ -223,19 +233,22 @@ while True:
             zecmate_transaction_hashes
             )
 
-        if zecmate_block_fields == zcashd_block_fields:
+        if zecmate_block_fields == zcashd_block_fields and zecmate_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         ZECMATE_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(zecmate_block_response == None):
-            send_slack_notification(message="zecmate_block_response is empty") 
+            send_slack_notification(message="zecmate_block_response is empty")
+            ZECMATE_BLOCK_HEIGHT_PORT.state('0')
+            ZECMATE_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZECMATE", str(exception_string))  
 
     #ZCASHFR
+    zcashfr_block_height_not_correct = False
     zcashfr_block_response = zcashfr_block = None
     try:
         zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields[0], timeout=5)
@@ -247,6 +260,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            zcashfr_block_height_not_correct = True
         ZCASHFR_BLOCK_HEIGHT_PORT.state(set_state)
 
         zcashfr_transaction_hashes = zcashfr_block["tx"]
@@ -267,19 +281,22 @@ while True:
             zcashfr_transaction_hashes
             )
 
-        if zcashfr_block_fields == zcashd_block_fields:
+        if zcashfr_block_fields == zcashd_block_fields and zcashfr_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         ZCASHFR_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(zcashfr_block_response == None):
-            send_slack_notification(message="zcashfr_block_response is empty") 
+            send_slack_notification(message="zcashfr_block_response is empty")
+            ZCASHFR_BLOCK_HEIGHT_PORT.state('0')
+            ZCASHFR_LAST_BLOCK_CHECK_PORT.state('0') 
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCASHFR", str(exception_string))
 
     #CHAINSO
+    chainso_block_height_not_correct = False
     chainso_block_response = chainso_block = None
     try:
         chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=12)
@@ -291,6 +308,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            chainso_block_height_not_correct = True
         CHAINSO_BLOCK_HEIGHT_PORT.state(set_state)
 
         chainso_transaction_hashes = []
@@ -311,19 +329,22 @@ while True:
             chainso_transaction_hashes
             )
 
-        if chainso_block_fields == zcashd_block_fields_second_variation:
+        if chainso_block_fields == zcashd_block_fields_second_variation and chainso_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         CHAINSO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(chainso_block_response == None):
-            send_slack_notification(message="chainso_block_response is empty") 
+            send_slack_notification(message="chainso_block_response is empty")
+            CHAINSO_BLOCK_HEIGHT_PORT.state('0')
+            CHAINSO_LAST_BLOCK_CHECK_PORT.state('0') 
         else:
             exception_string = print_exception()
             notify_explorer_error("CHAINSO", str(exception_string))
 
     #NETDNA
+    netdna_block_height_not_correct = False
     netdna_block_response = netdna_block = None
     try:
         netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=5)
@@ -335,6 +356,7 @@ while True:
             set_state = '1'
         else:
             set_state = '0'
+            netdna_block_height_not_correct = True
         NETDNA_BLOCK_HEIGHT_PORT.state(set_state)
 
         netdna_transaction_hashes = []
@@ -355,14 +377,16 @@ while True:
             netdna_transaction_hashes
             )
 
-        if netdna_block_fields == zcashd_block_fields_second_variation:
+        if netdna_block_fields == zcashd_block_fields_second_variation and netdna_block_height_not_correct == False:
             set_state = '1'
         else:
             set_state = '0'
         NETDNA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         if(netdna_block_response == None):
-            send_slack_notification(message="netdna_block_response is empty") 
+            send_slack_notification(message="netdna_block_response is empty")
+            NETDNA_BLOCK_HEIGHT_PORT.state('0')
+            NETDNA_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("NETDNA", str(exception_string))
