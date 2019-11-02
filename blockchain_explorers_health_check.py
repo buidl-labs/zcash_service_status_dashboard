@@ -398,7 +398,7 @@ while True:
         last_block_considered+=1
 
     slack_notification_counter += 1
-    print("iteration count = {}    block number = {}".format(slack_notification_counter, zcashd_height)
-    if slack_notification_counter % 30 == 0:
+    print("iteration count = {}    block number = {}".format(slack_notification_counter, zcashd_height))
+    if slack_notification_counter%30==0:
         send_slack_notification(
             message="{} iterations of blockchain_explorers_health_check.py done!".format(slack_notification_counter))
