@@ -111,6 +111,7 @@ while True:
             TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE.set(transparent_transactions_in_block)
             shielded_transactions_in_block = count_of_type_of_transactions[1]
             SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE.set(shielded_transactions_in_block)
+            BLOCK_HEIGHT_GAUGE.set(last_block_considered)
             time.sleep(5) #prometheus scrapes every 5 seconds, making sure every block gets counted
     except:
         exception_string = print_exception()
@@ -120,4 +121,4 @@ while True:
     print(slack_notification_counter)
     if slack_notification_counter % 30 == 0:
         send_slack_notification(message="{} iterations of metrics.py done!".format(slack_notification_counter))
-    time.sleep(30)
+    time.sleep(20)

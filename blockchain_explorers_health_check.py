@@ -100,11 +100,10 @@ while True:
     zcha_block_response = zcha_block = None
     try:
         zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
-        zcha_block = zcha_block_response.json()
         if zcha_block_response.status_code != 200:
-            time.sleep(5)
+            time.sleep(2)
             zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
-            zcha_block = zcha_block_response.json()
+        zcha_block = zcha_block_response.json()
         if zcashd_height == zcha_block["height"]:
             set_state = '1'
         else:
@@ -155,10 +154,10 @@ while True:
     zcashnetworkinfo_block_height_not_correct = False
     zcashnetworkinfo_block_response = zcashnetworkinfo_block = None
     try:
-        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=5)
+        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=10)
         if zcashnetworkinfo_block_response.status_code != 200:
             time.sleep(5)
-            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
+            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields[0], timeout=10)
         zcashnetworkinfo_block = zcashnetworkinfo_block_response.json()
         if zcashd_height == zcashnetworkinfo_block["height"]:
             set_state = '1'
@@ -300,10 +299,10 @@ while True:
     chainso_block_height_not_correct = False
     chainso_block_response = chainso_block = None
     try:
-        chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=12)
+        chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=10)
         if chainso_block_response.status_code != 200:
             time.sleep(5)
-            chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=12)
+            chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=10)
         chainso_block = chainso_block_response.json()
         if zcashd_height == chainso_block["data"]["block_no"]:
             set_state = '1'
@@ -348,10 +347,10 @@ while True:
     netdna_block_height_not_correct = False
     netdna_block_response = netdna_block = None
     try:
-        netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=5)
+        netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=10)
         if netdna_block_response.status_code != 200:
             time.sleep(5)
-            netdna_block_response = requests.get(url=NETDNA_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=5)
+            netdna_block_response = requests.get(url=NETDNA_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=10)
         netdna_block = netdna_block_response.json()
         if zcashd_height == netdna_block["data"]["block_no"]:
             set_state = '1'
@@ -399,7 +398,7 @@ while True:
         last_block_considered+=1
 
     slack_notification_counter += 1
-    print(slack_notification_counter)
+    print("iteration count = {}    block number = {}".format(slack_notification_counter, zcashd_height)
     if slack_notification_counter % 30 == 0:
         send_slack_notification(
             message="{} iterations of blockchain_explorers_health_check.py done!".format(slack_notification_counter))

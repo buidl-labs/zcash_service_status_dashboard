@@ -14,3 +14,5 @@ TRANSPARENT_TRANSACTIONS_IN_BLOCK_GAUGE = Gauge('transparent_transactions_in_blo
                                                 'transparent_transactions_in_block_gauge gauge')
 SHIELDED_TRANSACTIONS_IN_BLOCK_GAUGE = Gauge('shielded_transactions_in_block_gauge',
                                              'shielded_transactions_in_block_gauge gauge')
+BLOCK_HEIGHT_GAUGE = Gauge('block_height_gauge', 
+                           'block_height_gauge gauge')
