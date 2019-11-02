@@ -143,10 +143,10 @@ while True:
             set_state = '0'
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        ZCHA_BLOCK_HEIGHT_PORT.state('0')
+        ZCHA_LAST_BLOCK_CHECK_PORT.state('0')
         if(zcha_block_response == None):
             send_slack_notification(message="zcha_block_response is empty")
-            ZCHA_BLOCK_HEIGHT_PORT.state('0')
-            ZCHA_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCHA", str(exception_string))
@@ -191,10 +191,10 @@ while True:
             set_state = '0'
         ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state('0')
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('0')
         if(zcashnetworkinfo_block_response == None):
             send_slack_notification(message="zcashnetworkinfo_block_response is empty")
-            ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state('0')
-            ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCASHNETWORKINFO", str(exception_string))    
@@ -239,10 +239,10 @@ while True:
             set_state = '0'
         ZECMATE_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        ZECMATE_BLOCK_HEIGHT_PORT.state('0')
+        ZECMATE_LAST_BLOCK_CHECK_PORT.state('0')
         if(zecmate_block_response == None):
             send_slack_notification(message="zecmate_block_response is empty")
-            ZECMATE_BLOCK_HEIGHT_PORT.state('0')
-            ZECMATE_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("ZECMATE", str(exception_string))  
@@ -287,10 +287,11 @@ while True:
             set_state = '0'
         ZCASHFR_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        ZCASHFR_BLOCK_HEIGHT_PORT.state('0')
+        ZCASHFR_LAST_BLOCK_CHECK_PORT.state('0')
         if(zcashfr_block_response == None):
             send_slack_notification(message="zcashfr_block_response is empty")
-            ZCASHFR_BLOCK_HEIGHT_PORT.state('0')
-            ZCASHFR_LAST_BLOCK_CHECK_PORT.state('0') 
+             
         else:
             exception_string = print_exception()
             notify_explorer_error("ZCASHFR", str(exception_string))
@@ -335,10 +336,10 @@ while True:
             set_state = '0'
         CHAINSO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        CHAINSO_BLOCK_HEIGHT_PORT.state('0')
+        CHAINSO_LAST_BLOCK_CHECK_PORT.state('0') 
         if(chainso_block_response == None):
             send_slack_notification(message="chainso_block_response is empty")
-            CHAINSO_BLOCK_HEIGHT_PORT.state('0')
-            CHAINSO_LAST_BLOCK_CHECK_PORT.state('0') 
         else:
             exception_string = print_exception()
             notify_explorer_error("CHAINSO", str(exception_string))
@@ -383,10 +384,10 @@ while True:
             set_state = '0'
         NETDNA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
+        NETDNA_BLOCK_HEIGHT_PORT.state('0')
+        NETDNA_LAST_BLOCK_CHECK_PORT.state('0')
         if(netdna_block_response == None):
             send_slack_notification(message="netdna_block_response is empty")
-            NETDNA_BLOCK_HEIGHT_PORT.state('0')
-            NETDNA_LAST_BLOCK_CHECK_PORT.state('0')
         else:
             exception_string = print_exception()
             notify_explorer_error("NETDNA", str(exception_string))
