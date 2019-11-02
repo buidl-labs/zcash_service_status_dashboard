@@ -28,16 +28,16 @@ def block_info(block_hash_or_height, verbose_identifier):
     """gets the block data from zcash-cli and returns a json object"""
     try:
         zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+        zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     except:
         exception_string = print_exception()
         notify_explorer_error("ZCASHD", str(exception_string))
 
-    zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     return zcashd_block
 
 def zcashd_fields(last_block_hash_or_height, fields_identifier):
     """returns a list of all the fields to be checked in a block in correct order"""
-    zcashd_block = block_info(last_block_hash_or_height, "1")
+    zcashd_block = block_info(str(last_block_hash_or_height), "1")
     zcashd_transaction_hashes = []
     for this_transaction in range(len(zcashd_block["tx"])):
         zcashd_transaction_hashes.append(zcashd_block["tx"][this_transaction])
@@ -84,8 +84,8 @@ while True:
     try:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
-        zcashd_block_fields = zcashd_fields(zcashd_height, 1)
-        zcashd_block_fields_second_variation = zcashd_fields(zcashd_height, 2)
+        zcashd_block_fields = zcashd_fields(str(zcashd_height), 1)
+        zcashd_block_fields_second_variation = zcashd_fields(str(zcashd_height), 2)
     except:
         exception_string = print_exception()
         notify_explorer_error("ZCASHD", str(exception_string))
