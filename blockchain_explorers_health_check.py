@@ -27,7 +27,7 @@ def notify_explorer_error(identifier, exception_string):
 def block_info(block_hash_or_height, verbose_identifier):
     """gets the block data from zcash-cli and returns a json object"""
     try:
-        zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
+        zcashd_block_data = subprocess.run(["zcash-cli","getblock",str(block_hash_or_height), str(verbose_identifier)], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
         zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     except:
         exception_string = print_exception()
