@@ -99,10 +99,10 @@ while True:
     zcha_block_height_not_correct = False
     zcha_block_response = zcha_block = None
     try:
-        zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
+        zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=20)
         if zcha_block_response.status_code != 200:
             time.sleep(2)
-            zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=5)
+            zcha_block_response = requests.get(url=ZCHA_BLOCK_URL + zcashd_block_fields[0], timeout=20)
         zcha_block = zcha_block_response.json()
         if zcashd_height == zcha_block["height"]:
             set_state = '1'
@@ -154,10 +154,10 @@ while True:
     zcashnetworkinfo_block_height_not_correct = False
     zcashnetworkinfo_block_response = zcashnetworkinfo_block = None
     try:
-        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=10)
+        zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL + zcashd_block_fields[0], timeout=30)
         if zcashnetworkinfo_block_response.status_code != 200:
             time.sleep(5)
-            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields[0], timeout=10)
+            zcashnetworkinfo_block_response = requests.get(url=ZCASHNETWORKINFO_BLOCK_URL+ zcashd_block_fields[0], timeout=15)
         zcashnetworkinfo_block = zcashnetworkinfo_block_response.json()
         if zcashd_height == zcashnetworkinfo_block["height"]:
             set_state = '1'
@@ -202,10 +202,10 @@ while True:
     zecmate_block_height_not_correct = False
     zecmate_block_response = zecmate_block = None
     try:
-        zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields[0], timeout=5)
+        zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL + zcashd_block_fields[0], timeout=15)
         if zecmate_block_response.status_code != 200:
             time.sleep(5)
-            zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
+            zecmate_block_response = requests.get(url=ZECMATE_BLOCK_URL+ zcashd_block_fields[0], timeout=15)
         zecmate_block = zecmate_block_response.json()
         if zcashd_height == zecmate_block["height"]:
             set_state = '1'
@@ -250,10 +250,10 @@ while True:
     zcashfr_block_height_not_correct = False
     zcashfr_block_response = zcashfr_block = None
     try:
-        zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields[0], timeout=5)
+        zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL + zcashd_block_fields[0], timeout=15)
         if zcashfr_block_response.status_code != 200:
             time.sleep(5)
-            zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL+ zcashd_block_fields[0], timeout=5)
+            zcashfr_block_response = requests.get(url=ZCASHFR_BLOCK_URL+ zcashd_block_fields[0], timeout=15)
         zcashfr_block = zcashfr_block_response.json()
         if zcashd_height == zcashfr_block["height"]:
             set_state = '1'
@@ -299,7 +299,7 @@ while True:
     chainso_block_height_not_correct = False
     chainso_block_response = chainso_block = None
     try:
-        chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=10)
+        chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=30)
         if chainso_block_response.status_code != 200:
             time.sleep(5)
             chainso_block_response = requests.get(url=CHAINSO_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=10)
@@ -347,10 +347,10 @@ while True:
     netdna_block_height_not_correct = False
     netdna_block_response = netdna_block = None
     try:
-        netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=10)
+        netdna_block_response = requests.get(url=NETDNA_BLOCK_URL + str(zcashd_block_fields_second_variation[2]), timeout=30)
         if netdna_block_response.status_code != 200:
             time.sleep(5)
-            netdna_block_response = requests.get(url=NETDNA_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=10)
+            netdna_block_response = requests.get(url=NETDNA_BLOCK_URL+ str(zcashd_block_fields_second_variation[2]), timeout=15)
         netdna_block = netdna_block_response.json()
         if zcashd_height == netdna_block["data"]["block_no"]:
             set_state = '1'

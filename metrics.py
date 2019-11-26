@@ -30,7 +30,7 @@ def block_info(block_hash_or_height, verbose_identifier):
         zcashd_block_data = subprocess.run(["zcash-cli","getblock",block_hash_or_height, verbose_identifier], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
+        notify_metric_error("ZCASHD", str(exception_string))
 
     zcashd_block = json.loads((zcashd_block_data.stdout).strip())
     return zcashd_block
@@ -53,7 +53,7 @@ try:
     last_block_considered = int((last_block_transactions_checked_data.stdout).strip())
 except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
+        notify_metric_error("ZCASHD", str(exception_string))
 
 slack_notification_counter = 0
 while True:
@@ -63,13 +63,13 @@ while True:
         zcashd_blockcount_data = subprocess.run(["zcash-cli","getblockcount"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
+        notify_metric_error("ZCASHD", str(exception_string))
         pass
     try:
         zcashd_blockchain_info = subprocess.run(["zcash-cli","getblockchaininfo"], check=True, stdout=subprocess.PIPE, universal_newlines=True, stderr=subprocess.PIPE)
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("ZCASHD", str(exception_string))
+        notify_metric_error("ZCASHD", str(exception_string))
         pass
 
     try:
@@ -86,14 +86,14 @@ while True:
              send_slack_notification("zcashd node reindex required")
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("value pool metric", str(exception_string))
+        notify_metric_error("value pool metric", str(exception_string))
 
     try:    
         zcash_difficulty = float(zcashd_blockchain_info_data["difficulty"])
         ZCASH_DIFFICULTY_GAUGE.set(zcash_difficulty)
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("zcash difficulty metric", str(exception_string))
+        notify_metric_error("zcash difficulty metric", str(exception_string))
 
     try:
         zcashd_height = int((zcashd_blockcount_data.stdout).strip())
@@ -115,7 +115,7 @@ while True:
             time.sleep(5) #prometheus scrapes every 5 seconds, making sure every block gets counted
     except:
         exception_string = print_exception()
-        notify_metric_explorer_error("transaction count metric", str(exception_string))
+        notify_metric_error("transaction count metric", str(exception_string))
 
     slack_notification_counter += 1
     print(slack_notification_counter)
