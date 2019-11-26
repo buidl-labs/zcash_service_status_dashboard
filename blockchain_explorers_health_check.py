@@ -143,7 +143,7 @@ while True:
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         ZCHA_BLOCK_HEIGHT_PORT.state('0')
-        ZCHA_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCHA_LAST_BLOCK_CHECK_PORT.state('-1')
         if(zcha_block_response == None):
             send_slack_notification(message="zcha_block_response is empty")
         else:
@@ -191,7 +191,7 @@ while True:
         ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state('0')
-        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('-1')
         if(zcashnetworkinfo_block_response == None):
             send_slack_notification(message="zcashnetworkinfo_block_response is empty")
         else:
@@ -239,7 +239,7 @@ while True:
         ZECMATE_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         ZECMATE_BLOCK_HEIGHT_PORT.state('0')
-        ZECMATE_LAST_BLOCK_CHECK_PORT.state('0')
+        ZECMATE_LAST_BLOCK_CHECK_PORT.state('-1')
         if(zecmate_block_response == None):
             send_slack_notification(message="zecmate_block_response is empty")
         else:
@@ -287,7 +287,7 @@ while True:
         ZCASHFR_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         ZCASHFR_BLOCK_HEIGHT_PORT.state('0')
-        ZCASHFR_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCASHFR_LAST_BLOCK_CHECK_PORT.state('-1')
         if(zcashfr_block_response == None):
             send_slack_notification(message="zcashfr_block_response is empty")
              
@@ -336,7 +336,7 @@ while True:
         CHAINSO_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         CHAINSO_BLOCK_HEIGHT_PORT.state('0')
-        CHAINSO_LAST_BLOCK_CHECK_PORT.state('0') 
+        CHAINSO_LAST_BLOCK_CHECK_PORT.state('-1') 
         if(chainso_block_response == None):
             send_slack_notification(message="chainso_block_response is empty")
         else:
@@ -384,7 +384,7 @@ while True:
         NETDNA_LAST_BLOCK_CHECK_PORT.state(set_state)
     except:
         NETDNA_BLOCK_HEIGHT_PORT.state('0')
-        NETDNA_LAST_BLOCK_CHECK_PORT.state('0')
+        NETDNA_LAST_BLOCK_CHECK_PORT.state('-1')
         if(netdna_block_response == None):
             send_slack_notification(message="netdna_block_response is empty")
         else:
