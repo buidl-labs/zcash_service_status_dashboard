@@ -141,9 +141,12 @@ while True:
         else:
             set_state = '0'
         ZCHA_LAST_BLOCK_CHECK_PORT.state(set_state)
+        ZCHA_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+
     except:
         ZCHA_BLOCK_HEIGHT_PORT.state('0')
-        ZCHA_LAST_BLOCK_CHECK_PORT.state('-1')
+        ZCHA_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCHA_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(zcha_block_response == None):
             send_slack_notification(message="zcha_block_response is empty")
         else:
@@ -189,9 +192,12 @@ while True:
         else:
             set_state = '0'
         ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state(set_state)
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+        
     except:
         ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT.state('0')
-        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('-1')
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCASHNETWORKINFO_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(zcashnetworkinfo_block_response == None):
             send_slack_notification(message="zcashnetworkinfo_block_response is empty")
         else:
@@ -237,9 +243,12 @@ while True:
         else:
             set_state = '0'
         ZECMATE_LAST_BLOCK_CHECK_PORT.state(set_state)
+        ZECMATE_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+
     except:
         ZECMATE_BLOCK_HEIGHT_PORT.state('0')
-        ZECMATE_LAST_BLOCK_CHECK_PORT.state('-1')
+        ZECMATE_LAST_BLOCK_CHECK_PORT.state('0')
+        ZECMATE_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(zecmate_block_response == None):
             send_slack_notification(message="zecmate_block_response is empty")
         else:
@@ -285,9 +294,12 @@ while True:
         else:
             set_state = '0'
         ZCASHFR_LAST_BLOCK_CHECK_PORT.state(set_state)
+        ZCASHFR_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+
     except:
         ZCASHFR_BLOCK_HEIGHT_PORT.state('0')
-        ZCASHFR_LAST_BLOCK_CHECK_PORT.state('-1')
+        ZCASHFR_LAST_BLOCK_CHECK_PORT.state('0')
+        ZCASHFR_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(zcashfr_block_response == None):
             send_slack_notification(message="zcashfr_block_response is empty")
              
@@ -334,9 +346,12 @@ while True:
         else:
             set_state = '0'
         CHAINSO_LAST_BLOCK_CHECK_PORT.state(set_state)
+        CHAINSO_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+
     except:
         CHAINSO_BLOCK_HEIGHT_PORT.state('0')
-        CHAINSO_LAST_BLOCK_CHECK_PORT.state('-1') 
+        CHAINSO_LAST_BLOCK_CHECK_PORT.state('0') 
+        CHAINSO_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(chainso_block_response == None):
             send_slack_notification(message="chainso_block_response is empty")
         else:
@@ -382,9 +397,12 @@ while True:
         else:
             set_state = '0'
         NETDNA_LAST_BLOCK_CHECK_PORT.state(set_state)
+        NETDNA_LAST_BLOCK_CHECK_GAUGE.set(int(set_state))
+
     except:
         NETDNA_BLOCK_HEIGHT_PORT.state('0')
-        NETDNA_LAST_BLOCK_CHECK_PORT.state('-1')
+        NETDNA_LAST_BLOCK_CHECK_PORT.state('0')
+        NETDNA_LAST_BLOCK_CHECK_GAUGE.set(-1)
         if(netdna_block_response == None):
             send_slack_notification(message="netdna_block_response is empty")
         else:

@@ -51,7 +51,7 @@ scrape_configs:
     static_configs:
       - targets: ['149.28.197.86:8095']
 
-- job_name: 'communities_and_forums_response_time'
+  - job_name: 'communities_and_forums_response_time'
 
     scrape_interval: 5s
     scrape_timeout: 5s

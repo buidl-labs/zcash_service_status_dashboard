@@ -7,34 +7,47 @@ ZCHA_BLOCK_URL = "https://api.zcha.in/v2/mainnet/blocks/"
 ZCHA_BLOCK_HEIGHT_PORT = Enum(
     'zcha_block_height_check', 'ZCHA Block Height Check', states=['1', '0'])
 ZCHA_LAST_BLOCK_CHECK_PORT = Enum(
-    'zcha_last_block_check', 'ZCHA LAST BLOCK CHECK', states=['1', '0','-1'])
+    'zcha_last_block_check', 'ZCHA LAST BLOCK CHECK', states=['1', '0'])
+ZCHA_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'zcha_last_block_gauge', 'ZCHA LAST BLOCK GAUGE')
 
 ZCASHNETWORKINFO_BLOCK_URL = "https://zcashnetwork.info/api/block/"
 ZCASHNETWORKINFO_BLOCK_HEIGHT_PORT = Enum(
     'zcashnetworkinfo_block_height_check', 'ZCASHNETWORKINFO Block Height Check', states=['1', '0'])
 ZCASHNETWORKINFO_LAST_BLOCK_CHECK_PORT = Enum(
-    'zcashnetworkinfo_last_block_check', 'ZCASHNETWORKINFO LAST BLOCK CHECK', states=['1', '0','-1'])
+    'zcashnetworkinfo_last_block_check', 'ZCASHNETWORKINFO LAST BLOCK CHECK', states=['1', '0'])
+ZCASHNETWORKINFO_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'zcashnetworkinfo_last_block_gauge', 'ZCASHNETWORKINFO LAST BLOCK GAUGE')
 
 CHAINSO_BLOCK_URL = "https://chain.so/api/v2/block/ZEC/"
 CHAINSO_BLOCK_HEIGHT_PORT = Enum(
     'chainso_block_height_check', 'CHAINSO Block Height Check', states=['1', '0'])
 CHAINSO_LAST_BLOCK_CHECK_PORT = Enum(
-    'chainso_last_block_check', 'CHAINSO LAST BLOCK CHECK', states=['1', '0','-1'])
+    'chainso_last_block_check', 'CHAINSO LAST BLOCK CHECK', states=['1', '0'])
+CHAINSO_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'chainso_last_block_gauge', 'CHAINSO LAST BLOCK GAUGE')
 
 ZECMATE_BLOCK_URL = "https://explorer.zecmate.com/api/block/"
 ZECMATE_BLOCK_HEIGHT_PORT = Enum(
     'zecmate_block_height_check', 'ZECMATE Block Height Check', states=['1', '0'])
 ZECMATE_LAST_BLOCK_CHECK_PORT = Enum(
-    'zecmate_last_block_check', 'ZECMATE LAST BLOCK CHECK', states=['1', '0','-1'])
+    'zecmate_last_block_check', 'ZECMATE LAST BLOCK CHECK', states=['1', '0'])
+ZECMATE_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'zecmate_last_block_gauge', 'ZECMATE LAST BLOCK GAUGE')
+
 
 ZCASHFR_BLOCK_URL = "https://explorer.zcashfr.io/api/block/"
 ZCASHFR_BLOCK_HEIGHT_PORT = Enum(
     'zcashfr_block_height_check', 'ZCASHFR Block Height Check', states=['1', '0'])
 ZCASHFR_LAST_BLOCK_CHECK_PORT = Enum(
-    'zcashfr_last_block_check', 'ZCASHFR LAST BLOCK CHECK', states=['1', '0','-1'])
+    'zcashfr_last_block_check', 'ZCASHFR LAST BLOCK CHECK', states=['1', '0'])
+ZCASHFR_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'zcashfr_last_block_gauge', 'ZCASHFR LAST BLOCK GAUGE')
 
 NETDNA_BLOCK_URL = "https://live-sochain-blockioinc.netdna-ssl.com/api/v2/block/ZEC/"
 NETDNA_BLOCK_HEIGHT_PORT = Enum(
     'netdna_block_height_check', 'NETDNA Block Height Check', states=['1', '0'])
 NETDNA_LAST_BLOCK_CHECK_PORT = Enum(
-    'netdna_last_block_check', 'NETDNA LAST BLOCK CHECK', states=['1', '0','-1'])
+    'netdna_last_block_check', 'NETDNA LAST BLOCK CHECK', states=['1', '0'])
+NETDNA_LAST_BLOCK_CHECK_GAUGE = Gauge(
+    'netdna_last_block_gauge', 'NETDNA LAST BLOCK GAUGE')
