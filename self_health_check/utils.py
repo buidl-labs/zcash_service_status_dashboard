@@ -10,9 +10,9 @@ def send_slack_notification(message):
     headers = {'Content-Type': 'application/json'}
     data = {"text": message}
     try:
-    	response = requests.post(url, data=json.dumps(
+        response = requests.post(url, data=json.dumps(
         data), headers=headers, timeout=20)
-    	# Unsure whether the message was posted!
-    	return response
-	except:
-		print("Error in posting to slack")
+        # Unsure whether the message was posted!
+        return response
+    except:
+        print("Error in posting to slack")
