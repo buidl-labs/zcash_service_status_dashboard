@@ -11,8 +11,11 @@ try:
         BLACKBOX_EXPORTER_URL, timeout=5)
     send_slack_notification(message="Blackbox exporter is running just fine!")
 except Exception as e:
-    notif_response = send_slack_notification(
-        message='Blackbox Exporter is not running and encountered the following error:')
-    notif_response = send_slack_notification(
-        message=str(e)
-    )
+    try:
+        notif_response = send_slack_notification(
+            message='Blackbox Exporter is not running and encountered the following error:')
+        notif_response = send_slack_notification(
+            message=str(e))
+    except: 
+        print("Error in posting to slack")
+        

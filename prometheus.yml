@@ -91,3 +91,4 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9115 # The blackbox exporter.
+        
