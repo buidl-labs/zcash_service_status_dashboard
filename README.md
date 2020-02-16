@@ -1,5 +1,5 @@
-# ZCash Service Status Dashboard
-This readme deals with installation and setup instructions for building a health-check system for ZCash communities and exchanges. The dashboard is live [here](https://zcashservicestatus.info).
+# Zcash Service Status Dashboard
+This readme deals with installation and setup instructions for building a health-check system for Zcash communities and exchanges. The dashboard is live [here](https://zcashservicestatus.info).
 
 The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana.
 
