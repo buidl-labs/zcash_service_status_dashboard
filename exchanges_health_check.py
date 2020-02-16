@@ -9,16 +9,18 @@ start_http_server(8093)
 
 
 def notify_driver_health_check_issue(exception):
-    send_slack_notification(message="Some issue in driver_health_check!")
-    send_slack_notification(message=str(exception))
+    try:
+        send_slack_notification(message="Some issue in driver_health_check!")
+        send_slack_notification(message=str(exception))
+    except Exception:
+        pass
 
 
 def notify_exchange_error(exchange, exception):
-    send_slack_notification(
-        message="Something wrong or mismatching in {}'s response -> {}".format(
-            exchange, exception
-        )
-    )
+    try:
+        send_slack_notification(message="Something wrong or mismatching in {}'s response -> {}".format(exchange, exception))
+    except Exception:
+        pass
 
 
 slack_notification_counter = 0
