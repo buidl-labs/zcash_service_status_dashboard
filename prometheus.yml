@@ -21,35 +21,19 @@ scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
 
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
     scrape_timeout: 5s
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
 
     static_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'exchanges'
 
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
     scrape_timeout: 5s
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
 
     static_configs:
       - targets: ['localhost:8093']
-
-  - job_name: 'communities_and_forums_response_time'
-
-    scrape_interval: 5s
-    scrape_timeout: 5s
-
-    static_configs:
-      - targets: ['localhost:8096']
 
   - job_name: 'metrics'
 
@@ -66,6 +50,14 @@ scrape_configs:
 
     static_configs:
       - targets: ['149.28.197.86:8095']
+
+  - job_name: 'communities_and_forums_response_time'
+
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+    static_configs:
+      - targets: ['localhost:8096']
 
   - job_name: node
     # If prometheus-node-exporter is installed, grab stats about the local
@@ -99,3 +91,4 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9115 # The blackbox exporter.
+        
