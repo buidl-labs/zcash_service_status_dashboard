@@ -1,16 +1,16 @@
 # ZCash Service Status Dashboard
 This readme deals with installation and setup instructions for building a health-check system for ZCash communities and exchanges. The dashboard is live [here](https://zcashservicestatus.info).
 
-The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana. There is one Python script which iterates over twelve exchanges to extract and load the data in the dashboard. The Blackbox Exporter deals with checking on all the sites and forums (it checks for `200` status.)
+The health check system involves three tools: Prometheus, Blackbox Exporter and Grafana.
 
-## 1. Installing [Prometheus](https://www.digitalocean.com/community/tutorials/how-to-install-prometheus-on-ubuntu-16-04)
+## 1. Install [Prometheus](https://www.digitalocean.com/community/tutorials/how-to-install-prometheus-on-ubuntu-16-04)
 Use the prometheus.yml file included in this repository for the config.
 
 
-## 2. Installing [Grafana](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-grafana-on-ubuntu-18-04)
+## 2. Install [Grafana](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-grafana-on-ubuntu-18-04)
 
 
-## 3. Installing [Blackbox Exporter](https://www.digitalocean.com/community/tutorials/how-to-use-alertmanager-and-blackbox-exporter-to-monitor-your-web-server-on-ubuntu-16-04)
+## 3. Install [Blackbox Exporter](https://www.digitalocean.com/community/tutorials/how-to-use-alertmanager-and-blackbox-exporter-to-monitor-your-web-server-on-ubuntu-16-04)
 
 
 ## 4. Install Dependencies
@@ -18,7 +18,6 @@ Use the prometheus.yml file included in this repository for the config.
 sudo apt-get install python3-pip
 pip3 install prometheus-client==0.7.1
 ```
-
 
 
 ## 5. Now, run these commands in different screens to run all the health checks.
