@@ -30,31 +30,6 @@ EXMO_USD_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
 EXMO_BTC_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
     'exmo_btc_transaction_volume_absolute', 'exmo_btc_transaction_volume_absolute_gauge')
 
-# Bitlish Configs
-BITLISH_URL = "https://bitlish.com/api/v1/tickers"
-BITLISH_SPOT_PRICE_USD_PORT = Enum('bitlish_spot_price_usd_check',
-                                   'Bitlish Spot Price USD Check', states=['1', '0'])
-BITLISH_SPOT_PRICE_BTC_PORT = Enum('bitlish_spot_price_btc_check',
-                                   'Bitlish Spot Price BTC Check', states=['1', '0'])
-BITLISH_TRANSACTION_VOLUME_USD_PORT = Enum(
-    'bitlish_transaction_volume_usd_check', 'Bitlish Transaction Volume USD Check', states=['1', '0'])
-BITLISH_TRANSACTION_VOLUME_BTC_PORT = Enum(
-    'bitlish_transaction_volume_btc_check', 'Bitlish Transaction Volume BTC Check', states=['1', '0'])
-BITLISH_SPOT_PRICE_MEDIAN_DEVIATION_PORT = Histogram(
-    'bitlish_spot_price_deviation_check', 'Bitlish Spot Price Deviation Check')
-BITLISH_USD_SPOT_PRICE_DEVIATION_GAUGE = Gauge('bitlish_usd_spot_price_deviation_gauge',
-                                               'bitlish_usd_spot_price_deviation_gauge gauge')
-BITLISH_BTC_SPOT_PRICE_DEVIATION_GAUGE = Gauge('bitlish_btc_spot_price_deviation_gauge',
-                                               'bitlish_btc_spot_price_deviation_gauge gauge')
-BITLISH_USD_SPOT_PRICE_ABSOLUTE = Gauge(
-    'bitlish_usd_spot_price_absolute', 'bitlish_usd_spot_price_absolute_gauge')
-BITLISH_BTC_SPOT_PRICE_ABSOLUTE = Gauge(
-    'bitlish_btc_spot_price_absolute', 'bitlish_btc_spot_price_absolute_gauge')
-BITLISH_USD_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
-    'bitlish_usd_transaction_volume_absolute', 'bitlish_usd_transaction_volume_absolute_gauge')
-BITLISH_BTC_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
-    'bitlish_btc_transaction_volume_absolute', 'bitlish_btc_transaction_volume_absolute_gauge')
-
 # Bittrex Configs
 BITTREX_ZEC_USD_SPOT_PRICE_URL = "https://api.bittrex.com/api/v1.1/public/getticker?market=USD-ZEC"
 BITTREX_ZEC_BTC_SPOT_PRICE_URL = "https://api.bittrex.com/api/v1.1/public/getticker?market=BTC-ZEC"
@@ -190,7 +165,6 @@ COINJAR_BTC_TRANSACTION_VOLUME_ABSOLUTE = Gauge(
 
 USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_DEVIATION_GAUGE,
-    "Bitlish": BITLISH_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bittrex": BITTREX_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Gemini": GEMINI_USD_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitfinex": BITFINEX_USD_SPOT_PRICE_DEVIATION_GAUGE,
@@ -200,7 +174,6 @@ USD_EXCHANGE = {
 
 BTC_EXCHANGE = {
     "Exmo": EXMO_BTC_SPOT_PRICE_DEVIATION_GAUGE,
-    "Bitlish": BITLISH_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Bittrex": BITTREX_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Gemini": GEMINI_BTC_SPOT_PRICE_DEVIATION_GAUGE,
     "Bitfinex": BITFINEX_BTC_SPOT_PRICE_DEVIATION_GAUGE,
@@ -210,7 +183,6 @@ BTC_EXCHANGE = {
 
 ABSOLUTE_PRICE_USD_EXCHANGE = {
     "Exmo": EXMO_USD_SPOT_PRICE_ABSOLUTE,
-    "Bitlish": BITLISH_USD_SPOT_PRICE_ABSOLUTE,
     "Bittrex": BITTREX_USD_SPOT_PRICE_ABSOLUTE,
     "Gemini": GEMINI_USD_SPOT_PRICE_ABSOLUTE,
     "Bitfinex": BITFINEX_USD_SPOT_PRICE_ABSOLUTE,
@@ -220,7 +192,6 @@ ABSOLUTE_PRICE_USD_EXCHANGE = {
 
 ABSOLUTE_PRICE_BTC_EXCHANGE = {
     "Exmo": EXMO_BTC_SPOT_PRICE_ABSOLUTE,
-    "Bitlish": BITLISH_BTC_SPOT_PRICE_ABSOLUTE,
     "Bittrex": BITTREX_BTC_SPOT_PRICE_ABSOLUTE,
     "Gemini": GEMINI_BTC_SPOT_PRICE_ABSOLUTE,
     "Bitfinex": BITFINEX_BTC_SPOT_PRICE_ABSOLUTE,
@@ -230,7 +201,6 @@ ABSOLUTE_PRICE_BTC_EXCHANGE = {
 
 ABSOLUTE_TRANSACTION_VOLUME_USD_EXCHANGE = {
     "Exmo": EXMO_USD_TRANSACTION_VOLUME_ABSOLUTE,
-    "Bitlish": BITLISH_USD_TRANSACTION_VOLUME_ABSOLUTE,
     "Bittrex": BITTREX_USD_TRANSACTION_VOLUME_ABSOLUTE,
     "Gemini": GEMINI_USD_TRANSACTION_VOLUME_ABSOLUTE,
     "Bitfinex": BITFINEX_USD_TRANSACTION_VOLUME_ABSOLUTE,
@@ -239,7 +209,6 @@ ABSOLUTE_TRANSACTION_VOLUME_USD_EXCHANGE = {
 
 ABSOLUTE_TRANSACTION_VOLUME_BTC_EXCHANGE = {
     "Exmo": EXMO_BTC_TRANSACTION_VOLUME_ABSOLUTE,
-    "Bitlish": BITLISH_BTC_TRANSACTION_VOLUME_ABSOLUTE,
     "Bittrex": BITTREX_BTC_TRANSACTION_VOLUME_ABSOLUTE,
     "Gemini": GEMINI_BTC_TRANSACTION_VOLUME_ABSOLUTE,
     "Bitfinex": BITFINEX_BTC_TRANSACTION_VOLUME_ABSOLUTE,
