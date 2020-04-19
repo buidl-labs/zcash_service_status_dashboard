@@ -41,7 +41,7 @@ scrape_configs:
     scrape_timeout: 5s
 
     static_configs:
-      - targets: ['149.28.197.86:8094']
+      - targets: ['localhost:8094']
 
   - job_name: 'blockchain_explorers'
 
@@ -49,7 +49,7 @@ scrape_configs:
     scrape_timeout: 5s
 
     static_configs:
-      - targets: ['149.28.197.86:8095']
+      - targets: ['localhost:8095']
 
   - job_name: 'communities_and_forums_response_time'
 
