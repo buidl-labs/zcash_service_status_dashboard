@@ -78,7 +78,7 @@ scrape_configs:
         - https://z.cash/
         - https://www.zfnd.org/
         - https://explorer.zcha.in
-        - https://chain.so/ZEC
+        - https://sochain.com/zec
         - https://zcashnetwork.info/
         - https://explorer.zcashfr.io/
         - https://live-sochain-blockioinc.netdna-ssl.com/zcash
