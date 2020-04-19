@@ -26,7 +26,7 @@ def notify_exchange_error(exchange, exception):
 slack_notification_counter = 0
 while True:
     # get the response for all exchanges asap, all at once to avoid time difference
-    exmo_response = bitlish_response = bittrex_spot_price_zec_usd_response = \
+    exmo_response = bittrex_spot_price_zec_usd_response = \
         bittrex_spot_price_zec_btc_response = bittrex_transaction_volume_response = gemini_zec_usd_response = \
         gemini_zec_btc_response = bitfinex_zec_usd_response = bitfinex_zec_btc_response = \
         binance_zec_btc_response = coinbase_zec_usd_response = \
@@ -36,11 +36,7 @@ while True:
     except Exception as e:
         notify_driver_health_check_issue(e)
         pass
-    try:
-        bitlish_response = requests.get(url=BITLISH_URL, timeout=5)
-    except Exception as e:
-        notify_driver_health_check_issue(e)
-        pass
+    
     try:
         bittrex_spot_price_zec_usd_response = requests.get(
             url=BITTREX_ZEC_USD_SPOT_PRICE_URL, timeout=5)
@@ -145,41 +141,6 @@ while True:
             send_slack_notification(message="Exmo response is None!")
         else:
             notify_exchange_error("Exmo", str(e))
-
-    # Bitlish
-    try:
-        bitlish_data = bitlish_response.json()
-        # setting transaction volume in USD
-        # bitlish_usd_transaction_volume = bitlish_data['zecusd']['updated']
-        # setting zec_usd spot price
-        bitlish_usd_spot_price = float(bitlish_data['zecusd']['last'])
-        # setting transaction volume in BTC
-        # bitlish_btc_transaction_volume = bitlish_data['zecbtc']['updated']
-        # setting zec_btc spot price
-        bitlish_btc_spot_price = float(bitlish_data['zecbtc']['last'])
-        # plotting usd and btc transaction volume and spot price
-        # if bitlish_usd_transaction_volume == 0:
-        #     set_state = '0'
-        # else:
-        #     set_state = '1'
-        # BITLISH_TRANSACTION_VOLUME_USD_PORT.state(set_state)
-        # if bitlish_btc_transaction_volume == 0:
-        #     set_state = '0'
-        # else:
-        #     set_state = '1'
-        # BITLISH_TRANSACTION_VOLUME_BTC_PORT.state(set_state)
-        if bitlish_usd_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        BITLISH_SPOT_PRICE_USD_PORT.state(set_state)
-        if bitlish_btc_spot_price == 0:
-            set_state = '0'
-        else:
-            set_state = '1'
-        BITLISH_SPOT_PRICE_BTC_PORT.state(set_state)
-    except Exception as e:
-        notify_exchange_error("Bitlish", str(e))
 
     # Bittrex
     try:
@@ -347,9 +308,9 @@ while True:
     except Exception as e:
         notify_exchange_error("Coinjar", str(e))
 
-    spot_price_usd = [exmo_usd_spot_price, bitlish_usd_spot_price,
+    spot_price_usd = [exmo_usd_spot_price,
                       bittrex_usd_spot_price, gemini_usd_spot_price, bitfinex_usd_spot_price, kraken_usd_spot_price]
-    spot_price_btc = [exmo_btc_spot_price, bitlish_btc_spot_price,
+    spot_price_btc = [exmo_btc_spot_price,
                       bittrex_btc_spot_price, gemini_btc_spot_price, bitfinex_btc_spot_price, binance_btc_spot_price]
     spot_price_median_usd = median(spot_price_usd)
     spot_price_median_btc = median(spot_price_btc)
@@ -359,7 +320,6 @@ while True:
     # Create a config of exchange: price for many use-cases
     spot_price_usd_all_exchanges = {
         "Exmo": exmo_usd_spot_price,
-        "Bitlish": bitlish_usd_spot_price,
         "Bittrex": bittrex_usd_spot_price,
         "Gemini": gemini_usd_spot_price,
         "Bitfinex": bitfinex_usd_spot_price,
@@ -368,7 +328,6 @@ while True:
     }
     spot_price_btc_all_exchanges = {
         "Exmo": exmo_btc_spot_price,
-        "Bitlish": bitlish_btc_spot_price,
         "Bittrex": bittrex_btc_spot_price,
         "Gemini": gemini_btc_spot_price,
         "Bitfinex": bitfinex_btc_spot_price,
