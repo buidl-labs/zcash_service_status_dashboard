@@ -1,0 +1,6 @@
+[Service]
+ExecStart=/usr/bin/prometheus \
+  --config.file /home/ubuntu/production/zcash_service_status_dashboard/prometheus.yml
+
+[Install]
+WantedBy=multi-user.target
